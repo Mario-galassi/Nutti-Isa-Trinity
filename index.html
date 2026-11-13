@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nutti Trinity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>:root{
+  --cream:#FFF6E9; --cream2:#FBEBD3; --card:#FFFDF8; --choco:#4A2E17; --choco2:#6B4423; --caramel:#C7792E; --hazel:#9A6334;
+  --ok:#3E9B57; --okbg:#E3F4E6; --bad:#D2553F; --badbg:#FBE4DE; --hl:#FFE08A; --sky:#7FB7D9; --line:#E8D6BC;
+  --s1:#F6C453; --s2:#E98A5B; --s3:#7DB8A5; --s4:#9C8BD8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--choco);font-family:'Nunito',system-ui,sans-serif;font-size:18px;line-height:1.4}
+body{min-height:100vh;background:radial-gradient(circle at 20% 0%,#FFF9F0 0,var(--cream) 50%),var(--cream)}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none;touch-action:manipulation}
+h1,h2,h3,.fred{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;margin:0}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 40px}
+
+/* header */
+header{position:sticky;top:0;z-index:20;background:rgba(255,246,233,.94);backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
+.hbar{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 16px}
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--cream2);border:3px solid var(--caramel);overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.htitle{flex:1;min-width:0}
+.htitle h1{font-size:22px;line-height:1.1}
+.htitle small{color:var(--hazel);font-weight:700;font-size:13px}
+.nuts{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;background:var(--card);border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-size:18px;white-space:nowrap}
+.nuts.pop{animation:pop .5s}
+.iconbtn{width:44px;height:44px;border-radius:50%;background:var(--card);border:2px solid var(--line);font-size:20px;display:grid;place-items:center;flex:none}
+@keyframes pop{40%{transform:scale(1.25)}}
+
+/* Nutti bubble */
+.say{display:flex;gap:10px;align-items:flex-start;margin:14px 0}
+.say .avatar{width:58px;height:58px}
+.bubble{position:relative;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:12px 14px;flex:1;box-shadow:0 3px 0 var(--line)}
+.bubble:before{content:'';position:absolute;left:-10px;top:18px;border:8px solid transparent;border-right-color:var(--line)}
+.bubble.ok{background:var(--okbg);border-color:#A9D8B3}
+.bubble.bad{background:#FFF1EC;border-color:#F0B9A9}
+.bubble.hint{background:#FFF7DA;border-color:#EBD38A}
+.bubble b{color:var(--choco2)}
+
+/* cards & grid */
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 4px 0 var(--line);margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.mod{position:relative;text-align:left;background:var(--card);border:2px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 4px 0 var(--line);display:flex;gap:12px;align-items:center;min-height:86px;transition:transform .1s}
+.mod:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.mod .ico{font-size:34px;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:none}
+.mod h3{font-size:18px}
+.mod p{margin:2px 0 0;font-size:14px;color:var(--hazel)}
+.mod .tag{position:absolute;top:-9px;right:10px;background:var(--bad);color:#fff;font-size:12px;font-weight:800;border-radius:999px;padding:2px 8px}
+.focus{background:linear-gradient(135deg,#FFF3CF,#FFE7D0);border-color:#EFC98B}
+.focus ul{margin:6px 0 0;padding-left:20px}
+.pill{display:inline-block;background:var(--cream2);border-radius:999px;padding:2px 10px;font-weight:700;font-size:14px;margin:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;font-weight:700;font-size:15px}
+.chip.on{background:var(--choco2);color:#fff;border-color:var(--choco2)}
+.lbl{font-size:13px;font-weight:800;color:var(--hazel);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:16px;padding:12px 18px;font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:19px;background:var(--caramel);color:#fff;box-shadow:0 4px 0 #8E5320;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8E5320}
+.btn.soft{background:var(--card);color:var(--choco);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.green{background:var(--ok);box-shadow:0 4px 0 #2A6E3C}
+.btn.small{font-size:16px;padding:8px 12px;border-radius:12px}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.c{justify-content:center}
+.spacer{flex:1}
+
+/* progress */
+.prog{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.prog i{width:14px;height:14px;border-radius:50%;background:var(--line);display:block}
+.prog i.ok{background:var(--ok)}.prog i.meh{background:var(--s1)}.prog i.cur{background:var(--caramel);transform:scale(1.25)}
+
+/* question prompt */
+.prompt{font-family:'Fredoka',system-ui,sans-serif;font-size:22px;font-weight:500;text-align:center;margin:6px 0}
+.prompt .es{display:block;font-size:16px;font-family:'Nunito';color:var(--hazel);font-weight:700}
+.big{font-size:28px}
+.en{font-family:'Fredoka',system-ui,sans-serif;font-weight:500}
+
+/* tiles */
+.sandwich{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0 2px}
+.sandwich span{font-size:13px;font-weight:800;border-radius:10px;padding:3px 8px}
+.slot{min-height:72px;border:3px dashed var(--line);border-radius:18px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:#FFFBF3;margin:10px 0}
+.slot.ok{border-style:solid;border-color:var(--ok);background:var(--okbg)}
+.slot.bad{animation:shake .4s}
+.slot .ph{color:#C6B49A;font-weight:700}
+.bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:60px;margin:6px 0 12px}
+.tile{font-family:'Fredoka',system-ui,sans-serif;font-weight:500;font-size:22px;background:#fff;border:2px solid var(--choco2);border-radius:14px;padding:8px 14px;box-shadow:0 4px 0 var(--choco2);transition:transform .08s}
+.tile:active{transform:translateY(3px);box-shadow:0 1px 0 var(--choco2)}
+.tile.used{visibility:hidden}
+.tile.good{border-color:var(--ok);box-shadow:0 4px 0 var(--ok);background:var(--okbg)}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+
+/* options */
+.opts{display:grid;gap:10px;margin:12px 0}
+.opts.two{grid-template-columns:1fr 1fr}
+.opt{background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px;font-size:20px;font-family:'Fredoka',system-ui,sans-serif;font-weight:500;box-shadow:0 4px 0 var(--line);text-align:center;transition:transform .08s}
+.opt:active{transform:translateY(3px)}
+.opt.ok{background:var(--okbg);border-color:var(--ok);box-shadow:0 4px 0 var(--ok)}
+.opt.bad{background:var(--badbg);border-color:var(--bad);box-shadow:0 4px 0 var(--bad);opacity:.8}
+.opt.dim{opacity:.5}
+.opt small{display:block;font-family:'Nunito';font-size:14px;color:var(--hazel)}
+.answer-card{background:#fff;border:2px dashed var(--caramel);border-radius:16px;padding:14px;text-align:center;font-size:22px}
+mark{background:var(--hl);border-radius:6px;padding:0 4px;color:inherit}
+
+/* svg things */
+.svgbox{display:flex;justify-content:center}
+.svgbox svg{width:100%;max-width:420px;height:auto}
+.clocks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.clocks .opt{padding:6px}
+.bld{cursor:pointer}
+.bld rect{transition:fill .2s}
+.bld:hover rect{fill:#FFE3B8}
+.pulse{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.45}}
+
+/* memory */
+.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+@media (max-width:520px){.mem{grid-template-columns:repeat(3,1fr)}}
+.mc{aspect-ratio:1/1.05;border-radius:16px;position:relative;font-family:'Fredoka',system-ui,sans-serif;font-weight:500;font-size:17px;transition:transform .18s ease-in}
+.mc .face{position:absolute;inset:0;border-radius:16px;display:grid;place-items:center;padding:6px;text-align:center;line-height:1.15}
+.mc .back{background:linear-gradient(135deg,var(--caramel),var(--hazel));color:#fff;font-size:30px;box-shadow:0 4px 0 #7A4A20}
+.mc .front{background:#fff;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);display:none}
+.mc.open .front{display:grid}.mc.open .back{display:none}
+.mc.done .front{background:var(--okbg);border-color:var(--ok)}
+.mc.flip{transform:scaleX(0)}
+
+/* flashcards */
+.fc{min-height:220px;border-radius:24px;background:#fff;border:3px solid var(--line);box-shadow:0 6px 0 var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;transition:transform .16s ease-in;cursor:pointer;width:100%}
+.fc.flip{transform:scaleX(0)}
+.fc .big{font-family:'Fredoka'}
+.fc .note{margin-top:10px;color:var(--hazel);font-size:16px}
+
+/* exam */
+.examq{font-family:'Fredoka',system-ui,sans-serif;font-size:26px;text-align:center;padding:10px}
+.blur{filter:blur(9px);user-select:none}
+.mic{width:96px;height:96px;border-radius:50%;background:var(--bad);color:#fff;font-size:42px;box-shadow:0 5px 0 #8f3324}
+.mic.rec{animation:pulse 1s infinite}
+.transcript{background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;font-style:italic;min-height:44px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(74,46,23,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--cream);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px 18px 30px}
+@media (min-width:700px){.modal{align-items:center}.sheet{border-radius:24px}}
+select,input{font:inherit;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--choco);width:100%}
+table.stats{width:100%;border-collapse:collapse;font-size:15px}
+table.stats td{padding:6px 4px;border-bottom:1px solid var(--line)}
+.bar{height:10px;border-radius:6px;background:var(--line);overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--ok)}
+
+/* confetti */
+.cf{position:fixed;top:-20px;width:10px;height:14px;z-index:60;pointer-events:none;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.fade{animation:fadein .3s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}}
+.center{text-align:center}
+.muted{color:var(--hazel);font-size:15px}
+</style>
+</head>
+<body>
+<header><div class="hbar">
+  <button class="iconbtn" id="back" onclick="A.go('home')" aria-label="Volver">⬅️</button>
+  <div class="avatar"><img class="avimg" alt="Nutti"></div>
+  <div class="htitle"><h1>Nutti · Trinity</h1><small id="sub">Preparación Trinity · Grade 3</small></div>
+  <span class="nuts" id="nuts">🌰 0</span>
+  <button class="iconbtn" onclick="A.settings()" aria-label="Ajustes">⚙️</button>
+</div></header>
+<main class="wrap" id="main"></main>
+<script>window.NUTTI_IMG="data:image/webp;base64,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";</script>
+<script>/* ===== Nutti Trinity · contenido y generadores (sin DOM) ===== */
+var NT = (function () {
+  'use strict';
+
+  /* ---------- utilidades ---------- */
+  function rnd(n) { return Math.floor(Math.random() * n); }
+  function pick(a) { return a[rnd(a.length)]; }
+  function shuffle(a) {
+    var b = a.slice();
+    for (var i = b.length - 1; i > 0; i--) { var j = rnd(i + 1); var t = b[i]; b[i] = b[j]; b[j] = t; }
+    return b;
+  }
+  function uniq(a) { var s = {}, o = []; a.forEach(function (x) { var k = typeof x === 'string' ? x : JSON.stringify(x); if (!s[k]) { s[k] = 1; o.push(x); } }); return o; }
+  // Elige sin repetir los últimos N (por clave)
+  var lastPicks = {};
+  function pickFresh(key, arr, memory) {
+    memory = memory || Math.min(6, Math.floor(arr.length / 2));
+    var hist = lastPicks[key] || [];
+    var pool = arr.filter(function (x, i) { return hist.indexOf(i) < 0; });
+    if (!pool.length) pool = arr;
+    var item = pick(pool), idx = arr.indexOf(item);
+    hist.push(idx); while (hist.length > memory) hist.shift();
+    lastPicks[key] = hist;
+    return item;
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* =========================================================
+     1) BANCO DE PREGUNTAS
+     q: pregunta · a: respuesta de Nutti · k: parte clave de la respuesta
+     es: qué quiere saber Isa · qw: cómo empieza · trap: ficha trampa
+     rule: do / does / did / be / bepast / can · t: tema
+     ========================================================= */
+  var Q = [
+    // HOME LIFE
+    { t: 'home', q: 'Where do you live?', a: 'I live in a big tree in the park.', k: 'in a big tree in the park', es: 'dónde vive', qw: 'Where', trap: 'does', rule: 'do' },
+    { t: 'home', q: 'Who do you live with?', a: 'I live with my mum, my dad and my little brother.', k: 'my mum, my dad and my little brother', es: 'con quién vive', qw: 'Who', trap: 'does', rule: 'do' },
+    { t: 'home', q: 'What time do you get up?', a: 'I get up at seven o\'clock.', k: 'at seven o\'clock', es: 'a qué hora se levanta', qw: 'What time', trap: 'does', rule: 'do' },
+    { t: 'home', q: 'What time do you go to bed?', a: 'I go to bed at nine o\'clock.', k: 'at nine o\'clock', es: 'a qué hora se va a dormir', qw: 'What time', trap: 'goes', rule: 'do' },
+    { t: 'home', q: 'What do you usually do on Monday mornings?', a: 'I usually go to school on Monday mornings.', k: 'go to school', es: 'qué hace normalmente los lunes a la mañana', qw: 'What', trap: 'did', rule: 'do' },
+    { t: 'home', q: 'What do you like doing at the weekend?', a: 'I like climbing trees at the weekend.', k: 'climbing trees', es: 'qué le gusta hacer el fin de semana', qw: 'What', trap: 'likes', rule: 'do' },
+    { t: 'home', q: 'What chores do you have to do at home?', a: 'I have to tidy my bedroom.', k: 'tidy my bedroom', es: 'qué tareas de la casa tiene que hacer', qw: 'What', trap: 'has', rule: 'do' },
+    { t: 'home', q: 'What can\'t you do at home?', a: 'I can\'t play football in the kitchen!', k: 'play football in the kitchen', es: 'qué cosa NO puede hacer en su casa', qw: 'What', trap: 'don\'t', rule: 'can' },
+    // JOBS
+    { t: 'jobs', q: 'What does your mum do?', a: 'She\'s a doctor.', k: 'a doctor', es: 'de qué trabaja su mamá', qw: 'What', trap: 'do', rule: 'does' },
+    { t: 'jobs', q: 'Where does your dad work?', a: 'He works in a bank.', k: 'in a bank', es: 'dónde trabaja su papá', qw: 'Where', trap: 'works', rule: 'does' },
+    { t: 'jobs', q: 'How often does your mum go to work?', a: 'She goes to work every day.', k: 'every day', es: 'cada cuánto va su mamá a trabajar', qw: 'How often', trap: 'goes', rule: 'does' },
+    { t: 'jobs', q: 'How does your dad go to work?', a: 'He goes to work by bus.', k: 'by bus', es: 'cómo va su papá al trabajo (en qué)', qw: 'How', trap: 'do', rule: 'does' },
+    { t: 'jobs', q: 'What job do you want to have in the future?', a: 'I want to be a vet.', k: 'a vet', es: 'qué trabajo quiere tener cuando sea grande', qw: 'What', trap: 'does', rule: 'do' },
+    { t: 'jobs', q: 'Is your mum working now?', a: 'Yes, she is. She\'s working at the hospital.', k: 'Yes, she is', es: 'si su mamá está trabajando ahora', qw: 'Is', trap: 'Does', rule: 'be' },
+    // PLACES
+    { t: 'places', q: 'Where is your school?', a: 'My school is next to the lake.', k: 'next to the lake', es: 'dónde queda su escuela', qw: 'Where', trap: 'does', rule: 'be' },
+    { t: 'places', q: 'How do you get to school?', a: 'I walk to school.', k: 'walk', es: 'cómo va a la escuela', qw: 'How', trap: 'does', rule: 'do' },
+    { t: 'places', q: 'How long does it take you to get to school?', a: 'It takes ten minutes.', k: 'ten minutes', es: 'cuánto tiempo tarda en llegar a la escuela', qw: 'How long', trap: 'do', rule: 'does' },
+    { t: 'places', q: 'What can you see near your house?', a: 'I can see a big lake.', k: 'a big lake', es: 'qué puede ver cerca de su casa', qw: 'What', trap: 'do', rule: 'can' },
+    { t: 'places', q: 'What places can I visit in your city?', a: 'You can visit the zoo and the museum.', k: 'the zoo and the museum', es: 'qué lugares se pueden visitar en su ciudad', qw: 'What', trap: 'do', rule: 'can' },
+    { t: 'places', q: 'What is next to your house?', a: 'There\'s a big park next to my house.', k: 'a big park', es: 'qué hay al lado de su casa', qw: 'What', trap: 'are', rule: 'be' },
+    { t: 'places', q: 'Can you tell me how to get to the park?', a: 'Yes! Go straight on and turn left.', k: 'Yes!', es: 'si le puede explicar cómo llegar al parque', qw: 'Can', trap: 'Do', rule: 'can' },
+    // FREE TIME
+    { t: 'free', q: 'What do you like doing in your free time?', a: 'I like reading books.', k: 'reading books', es: 'qué le gusta hacer en su tiempo libre', qw: 'What', trap: 'does', rule: 'do' },
+    { t: 'free', q: 'Can you swim?', a: 'Yes, I can.', k: 'Yes, I can', es: 'si sabe nadar', qw: 'Can', trap: 'Do', rule: 'can' },
+    { t: 'free', q: 'What music do you like?', a: 'I like pop music.', k: 'pop music', es: 'qué música le gusta', qw: 'What', trap: 'does', rule: 'do' },
+    { t: 'free', q: 'How often do you watch TV?', a: 'I watch TV twice a week.', k: 'twice a week', es: 'cada cuánto mira tele', qw: 'How often', trap: 'does', rule: 'do' },
+    { t: 'free', q: 'Do you play video games?', a: 'Yes, I do. I play on Saturdays.', k: 'Yes, I do', es: 'si juega a los videojuegos', qw: 'Do', trap: 'Does', rule: 'do' },
+    { t: 'free', q: 'Do you have any hobbies?', a: 'Yes, I do. I collect acorns!', k: 'Yes, I do', es: 'si tiene algún hobby', qw: 'Do', trap: 'Does', rule: 'do' },
+    { t: 'free', q: 'Can you play any sports?', a: 'Yes, I can. I can play tennis.', k: 'Yes, I can', es: 'si sabe jugar algún deporte', qw: 'Can', trap: 'Do', rule: 'can' },
+    { t: 'free', q: 'What do you like doing after school?', a: 'I like playing in the park.', k: 'playing in the park', es: 'qué le gusta hacer después de la escuela', qw: 'What', trap: 'does', rule: 'do' },
+    // WEATHER
+    { t: 'weather', q: 'What is the weather like today?', a: 'It\'s sunny and hot.', k: 'sunny and hot', es: 'cómo está el tiempo hoy', qw: 'What', trap: 'was', rule: 'be' },
+    { t: 'weather', q: 'What was the weather like yesterday?', a: 'It was rainy and cold.', k: 'rainy and cold', es: 'cómo estuvo el tiempo ayer', qw: 'What', trap: 'is', rule: 'bepast' },
+    { t: 'weather', q: 'What do you usually do in summer?', a: 'I usually go to the beach.', k: 'go to the beach', es: 'qué hace normalmente en verano', qw: 'What', trap: 'did', rule: 'do' },
+    { t: 'weather', q: 'Do you like stormy days?', a: 'No, I don\'t. They\'re scary!', k: 'No, I don\'t', es: 'si le gustan los días de tormenta', qw: 'Do', trap: 'Does', rule: 'do' },
+    { t: 'weather', q: 'What is your favourite season?', a: 'My favourite season is autumn. Lots of nuts!', k: 'autumn', es: 'cuál es su estación favorita', qw: 'What', trap: 'are', rule: 'be' },
+    // TIMES & DATES
+    { t: 'dates', q: 'When is your birthday?', a: 'My birthday is on the fifth of May.', k: 'on the fifth of May', es: 'cuándo es su cumpleaños', qw: 'When', trap: 'are', rule: 'be' },
+    { t: 'dates', q: 'What day is today?', a: 'It\'s Friday.', k: 'Friday', es: 'qué día es hoy', qw: 'What', trap: 'was', rule: 'be' },
+    { t: 'dates', q: 'What day was yesterday?', a: 'It was Thursday.', k: 'Thursday', es: 'qué día fue ayer', qw: 'What', trap: 'is', rule: 'bepast' },
+    { t: 'dates', q: 'What time is it?', a: 'It\'s half past three.', k: 'half past three', es: 'qué hora es', qw: 'What time', trap: 'are', rule: 'be' },
+    { t: 'dates', q: 'What time do you have lunch?', a: 'I have lunch at one o\'clock.', k: 'at one o\'clock', es: 'a qué hora almuerza', qw: 'What time', trap: 'does', rule: 'do' },
+    { t: 'dates', q: 'When is your mum\'s birthday?', a: 'Her birthday is in March.', k: 'in March', es: 'cuándo es el cumpleaños de su mamá', qw: 'When', trap: 'are', rule: 'be' },
+    { t: 'dates', q: 'How old is your brother?', a: 'He\'s six.', k: 'six', es: 'cuántos años tiene su hermanito', qw: 'How old', trap: 'has', rule: 'be' },
+    // THE PAST
+    { t: 'past', q: 'Where were you yesterday afternoon?', a: 'I was at the park.', k: 'at the park', es: 'dónde estuvo ayer a la tarde', qw: 'Where', trap: 'was', rule: 'bepast' },
+    { t: 'past', q: 'What were you doing yesterday afternoon?', a: 'I was playing with my brother.', k: 'playing with my brother', es: 'qué estaba haciendo ayer a la tarde', qw: 'What', trap: 'was', rule: 'bepast' },
+    { t: 'past', q: 'What did you do yesterday?', a: 'I went to the zoo.', k: 'went to the zoo', es: 'qué hizo ayer', qw: 'What', trap: 'does', rule: 'did' },
+    { t: 'past', q: 'Where did you go last weekend?', a: 'I went to the river.', k: 'to the river', es: 'adónde fue el fin de semana pasado', qw: 'Where', trap: 'went', rule: 'did' },
+    { t: 'past', q: 'What did you eat for breakfast?', a: 'I ate toast and an apple.', k: 'toast and an apple', es: 'qué desayunó', qw: 'What', trap: 'ate', rule: 'did' },
+    { t: 'past', q: 'Did you watch TV yesterday?', a: 'No, I didn\'t. I read a book.', k: 'No, I didn\'t', es: 'si miró tele ayer', qw: 'Did', trap: 'watched', rule: 'did' },
+    { t: 'past', q: 'Who did you play with yesterday?', a: 'I played with my cousin.', k: 'my cousin', es: 'con quién jugó ayer', qw: 'Who', trap: 'played', rule: 'did' },
+    { t: 'past', q: 'What time did you get up today?', a: 'I got up at half past seven.', k: 'at half past seven', es: 'a qué hora se levantó hoy', qw: 'What time', trap: 'got', rule: 'did' },
+    { t: 'past', q: 'Did you go to school yesterday?', a: 'Yes, I did.', k: 'Yes, I did', es: 'si fue a la escuela ayer', qw: 'Did', trap: 'went', rule: 'did' },
+    { t: 'past', q: 'What did you see at the zoo?', a: 'I saw a giraffe and a lion.', k: 'a giraffe and a lion', es: 'qué vio en el zoológico', qw: 'What', trap: 'saw', rule: 'did' },
+    { t: 'past', q: 'Where was your mum yesterday?', a: 'She was at work.', k: 'at work', es: 'dónde estuvo su mamá ayer', qw: 'Where', trap: 'were', rule: 'bepast' },
+    { t: 'past', q: 'Were you at home last night?', a: 'Yes, I was.', k: 'Yes, I was', es: 'si estuvo en su casa anoche', qw: 'Were', trap: 'Was', rule: 'bepast' },
+    { t: 'past', q: 'How did you get to the zoo?', a: 'We went by car.', k: 'by car', es: 'cómo llegó al zoológico (en qué)', qw: 'How', trap: 'got', rule: 'did' },
+    { t: 'past', q: 'When did you visit your grandma?', a: 'I visited her on Sunday.', k: 'on Sunday', es: 'cuándo visitó a su abuela', qw: 'When', trap: 'visited', rule: 'did' },
+    { t: 'past', q: 'What did your brother do yesterday?', a: 'He played football.', k: 'played football', es: 'qué hizo su hermano ayer', qw: 'What', trap: 'does', rule: 'did' },
+    // NOW / HE-SHE
+    { t: 'home', q: 'What is your brother doing now?', a: 'He\'s sleeping!', k: 'sleeping', es: 'qué está haciendo su hermano ahora', qw: 'What', trap: 'does', rule: 'be' },
+    { t: 'jobs', q: 'Does your dad like football?', a: 'Yes, he does.', k: 'Yes, he does', es: 'si a su papá le gusta el fútbol', qw: 'Does', trap: 'Do', rule: 'does' },
+    { t: 'jobs', q: 'Does your mum work on Saturdays?', a: 'No, she doesn\'t.', k: 'No, she doesn\'t', es: 'si su mamá trabaja los sábados', qw: 'Does', trap: 'Do', rule: 'does' },
+    { t: 'free', q: 'What is your favourite food?', a: 'My favourite food is nuts, of course!', k: 'nuts', es: 'cuál es su comida favorita', qw: 'What', trap: 'are', rule: 'be' }
+  ];
+
+  var TOPICS = {
+    home: { name: 'Home life', es: 'Mi casa', ico: '🏠' },
+    jobs: { name: 'Jobs', es: 'Trabajos', ico: '👩‍⚕️' },
+    places: { name: 'Places', es: 'Lugares', ico: '🗺️' },
+    free: { name: 'Free time', es: 'Tiempo libre', ico: '🎮' },
+    weather: { name: 'Weather', es: 'El tiempo', ico: '🌦️' },
+    dates: { name: 'Times & dates', es: 'Horas y fechas', ico: '🕐' },
+    past: { name: 'The past', es: 'El pasado', ico: '⏪' }
+  };
+
+  // Palabras que empiezan preguntas (llavero)
+  var QW = {
+    'Where': { es: '¿Dónde?', ico: '📍', what: 'un lugar' },
+    'When': { es: '¿Cuándo?', ico: '📅', what: 'un día, mes o momento' },
+    'What time': { es: '¿A qué hora?', ico: '⏰', what: 'una hora del reloj' },
+    'Who': { es: '¿Quién? / ¿Con quién?', ico: '👤', what: 'una persona' },
+    'What': { es: '¿Qué? / ¿Cuál?', ico: '❓', what: 'una cosa o una acción' },
+    'How': { es: '¿Cómo?', ico: '🚲', what: 'la manera (a pie, en auto…)' },
+    'How often': { es: '¿Cada cuánto?', ico: '🔁', what: 'cuántas veces (every day, twice a week)' },
+    'How long': { es: '¿Cuánto tiempo?', ico: '⏳', what: 'cuánto dura algo' },
+    'How old': { es: '¿Cuántos años?', ico: '🎂', what: 'una edad' },
+    'Do': { es: '¿…? (sí/no)', ico: '✋', what: 'sí o no, presente con I/you/we/they' },
+    'Does': { es: '¿…? (sí/no)', ico: '✋', what: 'sí o no, presente con he/she/your mum' },
+    'Did': { es: '¿…? (sí/no)', ico: '🎒', what: 'sí o no, en pasado' },
+    'Can': { es: '¿Puede…? ¿Sabe…?', ico: '🦸', what: 'sí o no, una habilidad' },
+    'Is': { es: '¿Está…? ¿Es…?', ico: '✋', what: 'sí o no, con is' },
+    'Were': { es: '¿Estuvo…? (vos)', ico: '🎒', what: 'sí o no, pasado de are' },
+    'Was': { es: '¿Estuvo…? (él/ella)', ico: '🎒', what: 'sí o no, pasado de is' }
+  };
+  var WH = ['Where', 'When', 'What time', 'Who', 'What', 'How', 'How often', 'How long', 'How old'];
+  var YN = ['Do', 'Does', 'Did', 'Can', 'Is', 'Were', 'Was'];
+
+  // tokens de una pregunta → fichas (el "?" queda pegado a la última)
+  function tokens(q) { return q.split(' '); }
+
+  function builderTask(opts) {
+    opts = opts || {};
+    var pool = Q.filter(function (it) {
+      if (opts.topic && opts.topic !== 'all' && it.t !== opts.topic) return false;
+      if (opts.rules && opts.rules.indexOf(it.rule) < 0) return false;
+      return true;
+    });
+    var it = pickFresh('build' + (opts.topic || '') + (opts.rules || ''), pool, 8);
+    var tk = tokens(it.q);
+    var tiles = tk.map(function (w, i) { return { w: w, id: 'w' + i, ok: true }; });
+    if (opts.trap && it.trap) {
+      var trapW = it.trap;
+      // la trampa va con "?" si reemplaza a la última palabra
+      tiles.push({ w: trapW, id: 'trap', ok: false });
+    }
+    var sh = shuffle(tiles);
+    // que no quede ya ordenada
+    var guard = 0;
+    while (sh.filter(function (x) { return x.ok; }).map(function (x) { return x.w; }).join(' ') === it.q && guard++ < 10) sh = shuffle(tiles);
+    return { item: it, answer: tk, tiles: sh };
+  }
+  function checkBuild(task, words) { return words.join(' ') === task.answer.join(' '); }
+
+  // Detective: se muestra la respuesta, se elige la primera palabra
+  function detectiveTask() {
+    var it = pickFresh('detective', Q, 10);
+    var fam = WH.indexOf(it.qw) >= 0 ? WH : YN;
+    var avoid = { 'What time': ['When', 'What'], 'When': ['What time', 'What'], 'What': ['What time', 'When'], 'How': ['How often', 'How long'], 'How often': ['How'], 'How long': ['How'] };
+    var bad = (avoid[it.qw] || []).concat([it.qw]);
+    // en sí/no: evitar que dos ayudantes sean igual de válidos
+    if (it.qw === 'Were') bad.push('Was'); if (it.qw === 'Was') bad.push('Were');
+    var cands = shuffle(fam.filter(function (w) { return bad.indexOf(w) < 0; }));
+    if (fam === YN) cands = cands.concat(shuffle(['Where', 'What', 'When']));
+    var opts = shuffle([it.qw].concat(cands.slice(0, 3)));
+    return { item: it, options: opts, answer: it.qw };
+  }
+
+  /* ---------- Cazá el error ---------- */
+  var PAST = {
+    live: 'lived', get: 'got', go: 'went', do: 'did', like: 'liked', have: 'had', want: 'wanted', play: 'played', watch: 'watched',
+    eat: 'ate', see: 'saw', visit: 'visited', work: 'worked', take: 'took'
+  };
+  var THIRD = { go: 'goes', do: 'does', have: 'has', work: 'works', like: 'likes', take: 'takes', play: 'plays', watch: 'watches', live: 'lives', get: 'gets', want: 'wants' };
+  function errorTask() {
+    var pool = Q.filter(function (it) { return it.rule !== 'can' || it.qw !== 'Can' || true; });
+    var it = pickFresh('errors', pool, 12);
+    var tk = tokens(it.q);
+    var last = tk[tk.length - 1]; var lastBare = last.replace('?', '');
+    var bare = tk.slice(); bare[bare.length - 1] = lastBare;
+    function join(a) { var b = a.slice(); b[b.length - 1] = b[b.length - 1] + '?'; var s = b.join(' '); return s.charAt(0).toUpperCase() + s.slice(1); }
+    var lower = bare.map(function (w) { return w.toLowerCase(); });
+    var auxSet = ['do', 'does', 'did', 'is', 'are', 'was', 'were', 'can', 'can\'t'];
+    var ai = -1;
+    for (var i = 0; i < lower.length; i++) if (auxSet.indexOf(lower[i]) >= 0) { ai = i; break; }
+    var errs = [];
+    if (ai < 0) return errorTask();
+    var aux = lower[ai];
+    var si = ai + 1, subjLen = (lower[si] === 'your') ? 2 : 1;
+    if (lower[si] === 'the' || lower[si] === 'it' && aux !== 'does') subjLen = (lower[si] === 'the') ? 2 : 1;
+    if (['is', 'are', 'was', 'were'].indexOf(aux) >= 0) {
+      var stop = ['like', 'doing', 'now', 'yesterday', 'today', 'last', 'at', 'next'];
+      subjLen = 0;
+      for (var k2 = si; k2 < lower.length && stop.indexOf(lower[k2]) < 0 && !/ing$/.test(lower[k2]); k2++) subjLen++;
+    }
+    var vi = si + subjLen; if (lower[vi] === 'usually') vi++;
+    var verb = lower[vi];
+    function fixCase(a) { a = a.slice(); a[0] = cap(a[0]); for (var j = 1; j < a.length; j++) if (/^(Do|Does|Did|Can|Can't|Is|Were|Was|Are|You)$/.test(a[j])) a[j] = a[j].toLowerCase(); return a; }
+    function moveAux(arr, insertDo) { var e = arr.slice(); var w = e.splice(ai, 1)[0]; e.splice(ai + subjLen, 0, w); if (insertDo) e.splice(ai, 0, 'do'); return e; }
+    // E1: orden cambiado (quién antes del ayudante)
+    if (subjLen > 0 && !(lower[si] === 'it' && aux === 'is')) errs.push({ s: join(fixCase(moveAux(bare))), why: 'order' });
+    if (aux === 'do' || aux === 'does' || aux === 'did') {
+      // E2: sin ayudante
+      var e2 = bare.slice(); e2.splice(ai, 1);
+      if (verb && aux === 'did' && PAST[verb]) { e2[vi - 1] = PAST[verb]; }
+      if (verb && aux === 'does' && THIRD[verb]) { e2[vi - 1] = THIRD[verb]; }
+      errs.push({ s: join(fixCase(e2)), why: 'noaux' });
+      if (aux === 'did' && PAST[verb]) { var e3 = bare.slice(); e3[vi] = PAST[verb]; errs.push({ s: join(fixCase(e3)), why: 'didpast' }); }
+      if (aux === 'does' && THIRD[verb]) { var e4 = bare.slice(); e4[vi] = THIRD[verb]; errs.push({ s: join(fixCase(e4)), why: 'doess' }); }
+      if (aux === 'do' && lower[si] === 'you') { var e5 = bare.slice(); e5[ai] = 'does'; errs.push({ s: join(fixCase(e5)), why: 'doesyou' }); }
+      if (aux === 'does') { var e6 = bare.slice(); e6[ai] = 'do'; errs.push({ s: join(fixCase(e6)), why: 'dohe' }); }
+    } else if (aux === 'can' || aux === 'can\'t') {
+      errs.push({ s: join(fixCase(moveAux(bare, true))), why: 'docan' });
+      if (verb) { var e9 = bare.slice(); e9.splice(vi, 0, 'to'); errs.push({ s: join(fixCase(e9)), why: 'canto' }); }
+    } else {
+      var swap = { is: 'are', are: 'is', was: 'were', were: 'was' };
+      var e10 = bare.slice(); e10[ai] = swap[aux]; errs.push({ s: join(fixCase(e10)), why: 'beform' });
+    }
+    var correct = it.q;
+    errs = uniq(errs.filter(function (e) { return e.s !== correct; }).map(function (e) { return JSON.stringify(e); })).map(function (x) { return JSON.parse(x); });
+    var seen = {}; errs = errs.filter(function (e) { if (seen[e.s]) return false; seen[e.s] = 1; return true; });
+    if (errs.length < 2) return errorTask();
+    var chosen = shuffle(errs).slice(0, 2);
+    var options = shuffle([{ s: correct, ok: true }].concat(chosen.map(function (e) { return { s: e.s, ok: false, why: e.why }; })));
+    return { item: it, options: options };
+  }
+  var WHY = {
+    order: 'El ayudante (do, does, did, is, was, can…) va ANTES de la persona. Acordate del sánguche: 🔑 palabra pregunta → 🧑‍🍳 ayudante → 👤 quién → 🏃 acción.',
+    noaux: 'En inglés las preguntas necesitan un ayudante (do, does o did). ¡Sin ayudante el sánguche se desarma!',
+    didpast: 'Did es la mochila del pasado 🎒: él ya carga el pasado, entonces el verbo viaja liviano, en su forma normal (go, eat, see).',
+    doess: 'Does se queda con la "s" de he/she. Es como una figurita única: si la tiene does, el verbo no puede tenerla.',
+    doesyou: 'Con you, I, we y they el ayudante es do. Does es solo para he, she, it (o tu mamá, tu papá…).',
+    dohe: 'Cuando hablás de una sola persona que no sos vos (your mum, your dad, he, she) el ayudante es does.',
+    docan: 'Can es un superhéroe 🦸: no necesita ayudante. Nunca va "do" con can.',
+    canto: 'Después de can el verbo va solito, sin "to": can swim, can see.',
+    beform: 'Mirá quién es la persona: is/was van con uno solo (he, she, it, your mum); are/were van con you, we, they.',
+    dobe: 'Is, are, was y were son tan importantes que no necesitan ayudante: se ponen adelante solos.'
+  };
+
+  /* =========================================================
+     2) HORAS Y FECHAS
+     ========================================================= */
+  var NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+  var MINW = { 5: 'five', 10: 'ten', 15: 'quarter', 20: 'twenty', 25: 'twenty-five', 30: 'half' };
+  function normH(h) { h = ((h - 1) % 12 + 12) % 12 + 1; return h; }
+  function timePhrase(h, m) {
+    h = normH(h);
+    if (m === 0) return NUM[h] + ' o\'clock';
+    if (m <= 30) return MINW[m] + ' past ' + NUM[h];
+    return MINW[60 - m] + ' to ' + NUM[normH(h + 1)];
+  }
+  function timeKey(h, m) { return normH(h) + ':' + m; }
+  function digital(h, m) { return normH(h) + ':' + (m < 10 ? '0' : '') + m; }
+  function clockDistractors(h, m) {
+    var d = [];
+    if (m > 0 && m < 30) d.push([h - 1, 60 - m]);
+    if (m > 30) d.push([h + 1, 60 - m]);
+    if (m === 30) d.push([h + 1, 30]);
+    if (m === 0) d.push([h, 30]);
+    if (m > 30) d.push([h - 1, m]); else d.push([h + 1, m]);
+    var sh = m === 0 ? 12 : m / 5, sm = (normH(h) % 12) * 5; d.push([sh, sm]);
+    return d;
+  }
+  function randomTime(level) {
+    var mins = level === 1 ? [0, 30] : level === 2 ? [0, 15, 30, 45] : [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+    return [1 + rnd(12), pick(mins)];
+  }
+  function clockTask(level) {
+    var t = randomTime(level), h = t[0], m = t[1];
+    var correct = timePhrase(h, m);
+    var opts = [{ h: h, m: m, p: correct, ok: true }];
+    var seen = {}; seen[correct] = 1;
+    clockDistractors(h, m).concat([randomTime(level), randomTime(level), randomTime(level), randomTime(3), randomTime(3)]).forEach(function (x) {
+      var p = timePhrase(x[0], x[1]);
+      if (!seen[p] && opts.length < 4) { seen[p] = 1; opts.push({ h: normH(x[0]), m: x[1], p: p, ok: false }); }
+    });
+    while (opts.length < 4) { var r = randomTime(3), p = timePhrase(r[0], r[1]); if (!seen[p]) { seen[p] = 1; opts.push({ h: r[0], m: r[1], p: p, ok: false }); } }
+    return { h: normH(h), m: m, phrase: correct, options: shuffle(opts) };
+  }
+
+  var ORD = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth',
+    'twenty-first', 'twenty-second', 'twenty-third', 'twenty-fourth', 'twenty-fifth', 'twenty-sixth', 'twenty-seventh', 'twenty-eighth', 'twenty-ninth', 'thirtieth', 'thirty-first'];
+  function ordShort(n) { var s = 'th'; if (n % 100 < 11 || n % 100 > 13) { if (n % 10 === 1) s = 'st'; else if (n % 10 === 2) s = 'nd'; else if (n % 10 === 3) s = 'rd'; } return n + s; }
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var MONTHS_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  var DLEN = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  function datePhrase(d, mo) { return 'the ' + ORD[d] + ' of ' + MONTHS[mo - 1]; }
+  function dateTask() {
+    var mo = 1 + rnd(12), d;
+    // más chances de días "tramposos" (1-3, 11-13, 20-23, 30-31)
+    var tricky = [1, 2, 3, 11, 12, 13, 20, 21, 22, 23, 30, 31, 5, 8, 9];
+    do { d = Math.random() < 0.6 ? pick(tricky) : 1 + rnd(31); } while (d > DLEN[mo - 1]);
+    var correct = datePhrase(d, mo);
+    var cands = [];
+    if (d <= 12 && d !== mo && mo <= DLEN[d - 1]) cands.push([mo, d]);           // leído al revés (mes/día)
+    var ordSwap = { 3: 13, 13: 3, 30: 13, 2: 12, 12: 2, 1: 11, 11: 1, 20: 2, 21: 1, 22: 2, 23: 3, 31: 13 };
+    if (ordSwap[d] && ordSwap[d] <= DLEN[mo - 1]) cands.push([ordSwap[d], mo]);
+    cands.push([d, mo === 12 ? 11 : mo + 1]);
+    cands.push([d, mo === 1 ? 2 : mo - 1]);
+    var opts = [{ d: d, mo: mo, p: correct, ok: true }], seen = {}; seen[correct] = 1;
+    cands.forEach(function (c) { if (c[0] > DLEN[c[1] - 1]) return; var p = datePhrase(c[0], c[1]); if (!seen[p] && opts.length < 4) { seen[p] = 1; opts.push({ d: c[0], mo: c[1], p: p, ok: false }); } });
+    while (opts.length < 4) { var mm = 1 + rnd(12), dd = 1 + rnd(DLEN[mm - 1]), p = datePhrase(dd, mm); if (!seen[p]) { seen[p] = 1; opts.push({ d: dd, mo: mm, p: p, ok: false }); } }
+    return { d: d, mo: mo, phrase: correct, options: shuffle(opts) };
+  }
+  var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  var DAYS_ES = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+  function dayTask() {
+    var i = rnd(7), kind = pick(['yesterday', 'tomorrow']);
+    var ans = kind === 'yesterday' ? (i + 6) % 7 : (i + 1) % 7;
+    var other = kind === 'yesterday' ? (i + 1) % 7 : (i + 6) % 7;
+    var opts = [ans, other, i, (i + 3) % 7];
+    opts = uniq(opts); while (opts.length < 4) { var r = rnd(7); if (opts.indexOf(r) < 0) opts.push(r); }
+    var q = kind === 'yesterday' ? 'What day was yesterday?' : 'What day is tomorrow?';
+    var pre = kind === 'yesterday' ? 'It was ' : 'It\'s ';
+    return { today: DAYS[i], todayEs: DAYS_ES[i], q: q, kind: kind, options: shuffle(opts).map(function (k) { return { p: pre + DAYS[k] + '.', ok: k === ans }; }) };
+  }
+  var PREP_T = [
+    ['I get up ___ seven o\'clock.', 'at'], ['School starts ___ eight o\'clock.', 'at'], ['I have lunch ___ half past twelve.', 'at'],
+    ['We go to the cinema ___ the weekend.', 'at'], ['Owls sleep in the day and fly ___ night.', 'at'],
+    ['My birthday is ___ the fifth of May.', 'on'], ['I play tennis ___ Monday.', 'on'], ['We visit my grandma ___ Sunday afternoon.', 'on'],
+    ['There\'s no school ___ Saturday.', 'on'], ['I got a bike ___ my birthday.', 'on'],
+    ['My birthday is ___ March.', 'in'], ['It\'s very hot ___ summer.', 'in'], ['I go to school ___ the morning.', 'in'],
+    ['It snows ___ winter.', 'in'], ['We go to the beach ___ January.', 'in'], ['I do my homework ___ the afternoon.', 'in']
+  ];
+  function prepTimeTask() { var it = pickFresh('prepT', PREP_T, 6); return { s: it[0], ans: it[1], options: ['in', 'on', 'at'] }; }
+
+  /* =========================================================
+     3) DIRECCIONES Y LUGARES
+     ========================================================= */
+  var PLACES = [
+    { n: 'school', e: '🏫' }, { n: 'bank', e: '🏦' }, { n: 'park', e: '🌳' }, { n: 'hospital', e: '🏥' }, { n: 'supermarket', e: '🛒' },
+    { n: 'library', e: '📚' }, { n: 'bakery', e: '🥐' }, { n: 'cinema', e: '🎬' }, { n: 'swimming pool', e: '🏊' }, { n: 'café', e: '☕' },
+    { n: 'museum', e: '🏛️' }, { n: 'zoo', e: '🦒' }, { n: 'toy shop', e: '🧸' }, { n: 'post office', e: '📮' }, { n: 'pet shop', e: '🐶' }, { n: 'restaurant', e: '🍝' }
+  ];
+  // Mapa: caminás desde abajo hacia arriba por Main Street
+  var SLOTS = {
+    L1: { x: 66, y: 302, w: 70, h: 64, say: 'Go straight on. It\'s on your left, before the first corner.', path: [[170, 392], [170, 334]], side: 'L' },
+    R1: { x: 204, y: 302, w: 70, h: 64, say: 'Go straight on. It\'s on your right, before the first corner.', path: [[170, 392], [170, 334]], side: 'R' },
+    L2: { x: 66, y: 164, w: 70, h: 74, say: 'Go straight on. Go past the first corner. It\'s on your left.', path: [[170, 392], [170, 201]], side: 'L' },
+    R2: { x: 204, y: 164, w: 70, h: 74, say: 'Go straight on. Go past the first corner. It\'s on your right.', path: [[170, 392], [170, 201]], side: 'R' },
+    L3: { x: 66, y: 20, w: 70, h: 78, say: 'Go straight on. Go past the second corner. It\'s on your left.', path: [[170, 392], [170, 59]], side: 'L' },
+    R3: { x: 204, y: 20, w: 70, h: 78, say: 'Go straight on. Go past the second corner. It\'s on your right.', path: [[170, 392], [170, 59]], side: 'R' },
+    W1: { x: 2, y: 240, w: 54, h: 60, say: 'Go straight on. Turn left at the first corner. It\'s at the end of the street.', path: [[170, 392], [170, 270], [60, 270]] },
+    E1: { x: 284, y: 240, w: 54, h: 60, say: 'Go straight on. Turn right at the first corner. It\'s at the end of the street.', path: [[170, 392], [170, 270], [280, 270]] },
+    W2: { x: 2, y: 100, w: 54, h: 60, say: 'Go straight on. Turn left at the second corner. It\'s at the end of the street.', path: [[170, 392], [170, 130], [60, 130]] },
+    E2: { x: 284, y: 100, w: 54, h: 60, say: 'Go straight on. Turn right at the second corner. It\'s at the end of the street.', path: [[170, 392], [170, 130], [280, 130]] }
+  };
+  var SLOT_KEYS = Object.keys(SLOTS);
+  // distractores "parecidos" para obligar a pensar
+  var NEAR = { L1: ['R1', 'L2', 'W1'], R1: ['L1', 'R2', 'E1'], L2: ['R2', 'L1', 'L3', 'W1'], R2: ['L2', 'R1', 'R3', 'E1'], L3: ['R3', 'L2', 'W2'], R3: ['L3', 'R2', 'E2'], W1: ['E1', 'W2', 'L1', 'L2'], E1: ['W1', 'E2', 'R1', 'R2'], W2: ['E2', 'W1', 'L3'], E2: ['W2', 'E1', 'R3'] };
+  function newMap() {
+    var pl = shuffle(PLACES).slice(0, SLOT_KEYS.length), m = {};
+    SLOT_KEYS.forEach(function (k, i) { m[k] = pl[i]; });
+    return m;
+  }
+  function followTask(map) { var k = pickFresh('follow', SLOT_KEYS, 4); return { slot: k, place: map[k], say: SLOTS[k].say }; }
+  function explainTask(map) {
+    var k = pickFresh('explain', SLOT_KEYS, 4);
+    var d = shuffle(NEAR[k]).slice(0, 2);
+    return { slot: k, place: map[k], options: shuffle([k].concat(d)).map(function (s) { return { s: s, say: SLOTS[s].say, ok: s === k }; }) };
+  }
+  // Calle de preposiciones: 2 filas x 4 columnas, la calle en el medio
+  function newStreet() { var pl = shuffle(PLACES).slice(0, 8); return [pl.slice(0, 4), pl.slice(4, 8)]; }
+  function rel(street) {
+    var R = [];
+    for (var r = 0; r < 2; r++) for (var c = 0; c < 4; c++) {
+      var p = street[r][c];
+      R.push({ t: 'opposite', a: p, b: street[1 - r][c] });
+      if (c > 0) R.push({ t: 'next', a: p, b: street[r][c - 1] });
+      if (c < 3) R.push({ t: 'next', a: p, b: street[r][c + 1] });
+      if (c > 0 && c < 3) R.push({ t: 'between', a: p, b: street[r][c - 1], c: street[r][c + 1] });
+    }
+    return R;
+  }
+  function isTrue(street, t, a, b, c) {
+    var pos = {};
+    street.forEach(function (row, r) { row.forEach(function (p, ci) { pos[p.n] = [r, ci]; }); });
+    var A = pos[a.n], B = pos[b.n];
+    if (t === 'opposite') return A[1] === B[1] && A[0] !== B[0];
+    if (t === 'next') return A[0] === B[0] && Math.abs(A[1] - B[1]) === 1;
+    if (t === 'between') { var C = pos[c.n]; return A[0] === B[0] && A[0] === C[0] && ((B[1] === A[1] - 1 && C[1] === A[1] + 1) || (C[1] === A[1] - 1 && B[1] === A[1] + 1)); }
+    return false;
+  }
+  function sentence(t, b, c) {
+    if (t === 'opposite') return 'It\'s opposite the ' + b.n + '.';
+    if (t === 'next') return 'It\'s next to the ' + b.n + '.';
+    return 'It\'s between the ' + b.n + ' and the ' + c.n + '.';
+  }
+  function streetTask(street) {
+    var kind = pick(['opp', 'betw', 'where', 'where', 'next']);
+    var all = street[0].concat(street[1]);
+    if (kind === 'opp') {
+      var r = rnd(2), c = rnd(4), a = street[r][c], ans = street[1 - r][c];
+      var others = shuffle(all.filter(function (p) { return p !== ans && p !== a; }));
+      // incluir vecinos como distractores (los confunden con "opposite")
+      var near = []; if (c > 0) near.push(street[r][c - 1]); if (c < 3) near.push(street[1 - r][c + 1] || street[1 - r][c - 1]);
+      var opts = uniq([ans].concat(near.filter(function (p) { return p !== ans && p !== a; }), others)).slice(0, 4);
+      return { q: 'What\'s opposite the ' + a.n + '?', focus: [a], options: shuffle(opts).map(function (p) { return { p: p, ok: p === ans }; }), es: 'enfrente' };
+    }
+    if (kind === 'betw') {
+      var r2 = rnd(2), c2 = 1 + rnd(2), mid = street[r2][c2], L = street[r2][c2 - 1], Rr = street[r2][c2 + 1];
+      var opp = street[1 - r2][c2];
+      var oth = shuffle(all.filter(function (p) { return [mid, L, Rr, opp].indexOf(p) < 0; }));
+      var opts2 = [mid, opp].concat(oth.slice(0, 2));
+      return { q: 'What\'s between the ' + L.n + ' and the ' + Rr.n + '?', focus: [L, Rr], options: shuffle(opts2).map(function (p) { return { p: p, ok: p === mid }; }), es: 'entre' };
+    }
+    if (kind === 'next') {
+      var r3 = rnd(2), c3 = pick([0, 3]), a3 = street[r3][c3], ans3 = street[r3][c3 === 0 ? 1 : 2];
+      var opp3 = street[1 - r3][c3];
+      var oth3 = shuffle(all.filter(function (p) { return [a3, ans3, opp3].indexOf(p) < 0; }));
+      var opts3 = [ans3, opp3].concat(oth3.slice(0, 2));
+      return { q: 'What\'s next to the ' + a3.n + '?', focus: [a3], options: shuffle(opts3).map(function (p) { return { p: p, ok: p === ans3 }; }), es: 'al lado' };
+    }
+    // where: elegir la oración verdadera
+    var target = pick(all);
+    var trues = rel(street).filter(function (x) { return x.a === target; });
+    var tr = pick(trues);
+    var good = sentence(tr.t, tr.b, tr.c);
+    var bads = [], guard = 0;
+    while (bads.length < 2 && guard++ < 200) {
+      var t = pick(['opposite', 'next', 'between']);
+      var cand = shuffle(all.filter(function (p) { return p !== target; }));
+      var b = cand[0], c4 = cand[1];
+      if (isTrue(street, t, target, b, c4)) continue;
+      var s = sentence(t, b, c4);
+      if (s === good || bads.indexOf(s) >= 0) continue;
+      bads.push(s);
+    }
+    return { q: 'Where\'s the ' + target.n + '?', focus: [target], options: shuffle([good].concat(bads)).map(function (s) { return { p: s, ok: s === good }; }), es: 'dónde', isSentence: true };
+  }
+
+  /* =========================================================
+     4) EL PASADO
+     ========================================================= */
+  var VERBS = [
+    ['go', 'went', 'ir'], ['eat', 'ate', 'comer'], ['see', 'saw', 'ver'], ['have', 'had', 'tener'], ['get', 'got', 'conseguir / llegar'],
+    ['buy', 'bought', 'comprar'], ['swim', 'swam', 'nadar'], ['make', 'made', 'hacer (fabricar)'], ['take', 'took', 'tomar / llevar'],
+    ['ride', 'rode', 'andar (en bici, a caballo)'], ['drink', 'drank', 'tomar (beber)'], ['sleep', 'slept', 'dormir'], ['write', 'wrote', 'escribir'],
+    ['come', 'came', 'venir'], ['run', 'ran', 'correr'], ['sing', 'sang', 'cantar'], ['give', 'gave', 'dar'], ['find', 'found', 'encontrar'],
+    ['do', 'did', 'hacer'], ['fly', 'flew', 'volar'], ['draw', 'drew', 'dibujar'], ['wake up', 'woke up', 'despertarse'],
+    ['play', 'played', 'jugar'], ['watch', 'watched', 'mirar'], ['visit', 'visited', 'visitar'], ['walk', 'walked', 'caminar'],
+    ['listen', 'listened', 'escuchar'], ['cook', 'cooked', 'cocinar'], ['clean', 'cleaned', 'limpiar'], ['help', 'helped', 'ayudar'],
+    ['dance', 'danced', 'bailar'], ['study', 'studied', 'estudiar'], ['stay', 'stayed', 'quedarse'], ['climb', 'climbed', 'trepar'],
+    ['paint', 'painted', 'pintar'], ['jump', 'jumped', 'saltar']
+  ];
+  var IRREG = {}; VERBS.forEach(function (v) { var reg = v[0].replace(/e$/, '') + 'ed'; IRREG[v[0]] = (v[1] !== reg && v[1] !== v[0].replace(/y$/, 'ied')); });
+  var COMPL = {
+    go: 'to the park', eat: 'a big pizza', see: 'a rainbow', have: 'a great time', get: 'a new bike', buy: 'some sweets', swim: 'in the pool',
+    make: 'a cake', take: 'lots of photos', ride: 'my bike', drink: 'orange juice', sleep: 'for ten hours', write: 'a letter to my grandma',
+    come: 'home late', run: 'in the park', sing: 'a song', give: 'my friend a present', find: 'a coin in the street', do: 'my homework',
+    fly: 'a kite', draw: 'a dinosaur', 'wake up': 'at eight o\'clock', play: 'football', watch: 'a film', visit: 'my cousins', walk: 'to school',
+    listen: 'to music', cook: 'pancakes', clean: 'my bedroom', help: 'my dad', dance: 'at the party', study: 'for the test', stay: 'at home',
+    climb: 'a tree', paint: 'a picture', jump: 'into the pool'
+  };
+  var WHENS = ['Yesterday', 'Last weekend', 'Last Saturday', 'On Sunday', 'Two days ago', 'Last summer', 'Yesterday afternoon'];
+  var SUBJ = ['I', 'We', 'My mum', 'My friends', 'My brother', 'Nutti'];
+  function subjCase(s) { return /^(I|Nutti)$/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1); }
+  function regularize(b) { var w = b.split(' ')[0], rest = b.split(' ').slice(1).join(' '); var r = /e$/.test(w) ? w + 'd' : w + 'ed'; return rest ? r + ' ' + rest : r; }
+  function ing(b) { var w = b.split(' ')[0], rest = b.split(' ').slice(1).join(' '); var r = /ie$/.test(w) ? w.slice(0, -2) + 'ying' : /[^e]e$/.test(w) ? w.slice(0, -1) + 'ing' : w + 'ing'; if (/^(swim|run)$/.test(w)) r = w + w.slice(-1) + 'ing'; return rest ? r + ' ' + rest : r; }
+  function thirdS(b) { var w = b.split(' ')[0], rest = b.split(' ').slice(1).join(' '); var r = /(ch|sh|s|x|o)$/.test(w) ? w + 'es' : /[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ies' : w + 's'; if (w === 'have') r = 'has'; return rest ? r + ' ' + rest : r; }
+  function pastTask(onlyIrreg) {
+    var pool = onlyIrreg ? VERBS.filter(function (v) { return IRREG[v[0]]; }) : VERBS;
+    var v = pickFresh('past' + !!onlyIrreg, pool, 10);
+    var base = v[0], past = v[1];
+    var s = pick(SUBJ), when = pick(WHENS);
+    var c = COMPL[base];
+    var sent = when + ' ' + subjCase(s) + ' ___ ' + c + '.';
+    var wrong = IRREG[base] ? [base, regularize(base), ing(base)] : [base, thirdS(base), ing(base)];
+    if (base === 'study') wrong = ['study', 'studyed', 'studying'];
+    var opts = uniq([past].concat(wrong)).filter(function (x, i) { return i === 0 || x !== past; });
+    return { v: v, sentence: sent, base: base, ans: past, options: shuffle(opts.slice(0, 4)), irregular: IRREG[base] };
+  }
+  var BE_SUBJ = [['I', 'was'], ['My mum', 'was'], ['Nutti', 'was'], ['My dad', 'was'], ['The weather', 'was'], ['We', 'were'], ['My friends', 'were'], ['You', 'were'], ['They', 'were'], ['My grandparents', 'were']];
+  var BE_COMPL = { 'The weather': ['sunny', 'cold and rainy', 'very windy'] };
+  var BE_GEN = ['at the park', 'at school', 'very happy', 'at home', 'at the beach', 'tired', 'at the zoo'];
+  var BE_Q = [
+    ['Where ___ you yesterday afternoon?', 'were'], ['___ your mum at work yesterday?', 'Was'], ['Where ___ your dad last night?', 'was'],
+    ['___ you at home on Sunday?', 'Were'], ['What ___ the weather like yesterday?', 'was'], ['What ___ you doing at five o\'clock?', 'were'],
+    ['___ your friends at the party?', 'Were'], ['Who ___ your teacher last year?', 'was']
+  ];
+  function beTask() {
+    if (Math.random() < 0.4) {
+      var it = pickFresh('beq', BE_Q, 4);
+      var cap1 = it[1] === cap(it[1]);
+      return { sentence: it[0], ans: it[1], options: shuffle(cap1 ? ['Was', 'Were'] : ['was', 'were']), question: true };
+    }
+    var sb = pick(BE_SUBJ), comp = BE_COMPL[sb[0]] ? pick(BE_COMPL[sb[0]]) : pick(BE_GEN);
+    return { sentence: pick(WHENS) + ' ' + subjCase(sb[0]) + ' ___ ' + comp + '.', ans: sb[1], options: shuffle(['was', 'were']), subj: sb[0] };
+  }
+
+  /* =========================================================
+     5) MEMORIA Y TARJETAS
+     ========================================================= */
+  var DECKS = {
+    verbs: { name: 'Verbos en pasado', ico: '⏪', pairs: function () { return shuffle(VERBS.filter(function (v) { return IRREG[v[0]]; })).slice(0, 6).map(function (v) { return [v[0], v[1]]; }); } },
+    qwords: { name: 'Palabras pregunta', ico: '🔑', pairs: function () { return shuffle(['Where', 'When', 'What time', 'Who', 'How often', 'How long', 'How old', 'How']).slice(0, 6).map(function (w) { return [w, QW[w].ico + ' ' + QW[w].es]; }); } },
+    ordinals: { name: 'Números de fecha', ico: '📅', pairs: function () { return shuffle([1, 2, 3, 5, 8, 9, 12, 13, 20, 21, 22, 30, 31]).slice(0, 6).map(function (n) { return [ordShort(n), ORD[n]]; }); } },
+    clocks: { name: 'La hora', ico: '🕐', pairs: function () { var seen = {}, o = []; while (o.length < 6) { var t = randomTime(2), k = timeKey(t[0], t[1]); if (!seen[k]) { seen[k] = 1; o.push([digital(t[0], t[1]), timePhrase(t[0], t[1])]); } } return o; } },
+    dirs: { name: 'Direcciones', ico: '🧭', pairs: function () { return shuffle([['turn left', '⬅️ doblá a la izquierda'], ['turn right', '➡️ doblá a la derecha'], ['go straight on', '⬆️ seguí derecho'], ['opposite', '↔️ enfrente'], ['next to', '👫 al lado'], ['between', '🥪 entre'], ['behind', '🙈 detrás'], ['on the corner', '📐 en la esquina']]).slice(0, 6); } }
+  };
+  var CARDS = {
+    qwords: { name: 'Llavero de preguntas', ico: '🔑', list: WH.map(function (w) { return { en: w + '…?', es: QW[w].ico + ' ' + QW[w].es, note: 'Para preguntar por ' + QW[w].what + '.' }; }) },
+    exam: {
+      name: 'Frases salvavidas', ico: '🛟', list: [
+        { en: 'Sorry, can you repeat that, please?', es: 'Perdón, ¿lo podés repetir?', note: 'Si no escuchaste bien. ¡Se puede usar en el examen!' },
+        { en: 'Sorry, I don\'t understand.', es: 'Perdón, no entiendo.', note: 'Mejor decirlo que quedarse callada.' },
+        { en: 'Can you say it again, please?', es: '¿Lo podés decir otra vez?', note: 'Otra forma de pedir que repitan.' },
+        { en: 'Let me think…', es: 'Dejame pensar…', note: 'Te da tiempo para armar la respuesta.' },
+        { en: 'I\'m not sure, but I think…', es: 'No estoy segura, pero creo que…', note: 'Para contestar aunque dudes.' },
+        { en: 'What about you?', es: '¿Y vos?', note: 'Una pregunta fácil para hacerle al examinador.' },
+        { en: 'Good morning! / Good afternoon!', es: '¡Buen día! / ¡Buenas tardes!', note: 'Para saludar al entrar.' },
+        { en: 'Thank you. Goodbye!', es: 'Gracias. ¡Chau!', note: 'Para despedirte al final.' }
+      ]
+    },
+    verbs: { name: 'Verbos irregulares', ico: '⏪', list: VERBS.filter(function (v) { return IRREG[v[0]]; }).map(function (v) { return { en: v[0] + ' → ' + v[1], es: v[2], note: 'Yesterday I ' + v[1] + ' ' + COMPL[v[0]] + '.' }; }) },
+    dirs: {
+      name: 'Direcciones', ico: '🧭', list: [
+        { en: 'Go straight on.', es: '⬆️ Seguí derecho.', note: '' }, { en: 'Turn left.', es: '⬅️ Doblá a la izquierda.', note: 'Tu mano izquierda hace una L.' },
+        { en: 'Turn right.', es: '➡️ Doblá a la derecha.', note: '' }, { en: 'It\'s on your left.', es: 'Está a tu izquierda.', note: '' },
+        { en: 'It\'s on your right.', es: 'Está a tu derecha.', note: '' }, { en: 'at the end of the street', es: 'al final de la calle', note: '' },
+        { en: 'It\'s next to the bank.', es: '👫 Está al lado del banco.', note: '' }, { en: 'It\'s opposite the park.', es: '↔️ Está enfrente del parque.', note: 'Del otro lado de la calle.' },
+        { en: 'It\'s between the café and the zoo.', es: '🥪 Está entre el café y el zoológico.', note: 'Como el dulce de leche de un alfajor.' },
+        { en: 'It\'s on the corner.', es: '📐 Está en la esquina.', note: '' }
+      ]
+    }
+  };
+  function memoryPairs(deck) { return DECKS[deck].pairs(); }
+
+  /* =========================================================
+     6) SIMULACRO TRINITY
+     ========================================================= */
+  var EXAM = {
+    home: [['Where do you live?', 'I live in…'], ['Who do you live with?', 'I live with my…'], ['What time do you usually get up?', 'I get up at…'],
+      ['What time do you go to bed?', 'I go to bed at…'], ['What do you usually do on Monday mornings?', 'On Monday mornings I…'], ['What do you like doing at the weekend?', 'At the weekend I like…'],
+      ['What chores do you have to do at home?', 'I have to…'], ['What can\'t you do at home?', 'I can\'t…']],
+    jobs: [['What does your mum do?', 'My mum is a… / She works in…'], ['Where does your dad work?', 'He works in…'], ['How often does your mum go to work?', 'She goes to work… (every day…)'],
+      ['How does your dad go to work?', 'He goes by… / He walks.'], ['What job do you want to have in the future?', 'I want to be a…'], ['What\'s a good job, in your opinion? Why?', 'I think … is a good job because…'], ['Is your mum working now?', 'Yes, she is. / No, she isn\'t.']],
+    places: [['Where\'s your school?', 'My school is in… / It\'s next to…'], ['How do you get to school?', 'I go to school by… / I walk.'], ['How long does it take you to get to school?', 'It takes … minutes.'],
+      ['What can you see near your house?', 'I can see…'], ['What places can I visit in your city?', 'You can visit…'], ['Can you tell me how to get from your house to the park?', 'Go straight on… Turn…'], ['What\'s next to your school?', 'There\'s a … next to my school.']],
+    free: [['What do you like doing in your free time?', 'I like…ing'], ['Can you swim?', 'Yes, I can. / No, I can\'t.'], ['What music do you like to listen to?', 'I like…'],
+      ['How often do you watch TV?', 'I watch TV… (every day, twice a week)'], ['Do you play video games?', 'Yes, I do. / No, I don\'t.'], ['Where were you yesterday afternoon? What were you doing?', 'I was at… I was …ing'],
+      ['What do you like doing after school?', 'After school I like…'], ['Do you have any hobbies?', 'Yes, I do. My hobby is…']],
+    weather: [['What\'s the weather like today?', 'It\'s… (sunny, cloudy…)'], ['What was the weather like yesterday?', 'It was…'], ['What can people do on a rainy day?', 'People can…'],
+      ['What do you usually do in summer?', 'In summer I usually…'], ['Do you like stormy days? Why?', 'Yes, I do / No, I don\'t, because…'], ['What\'s your favourite season? Why?', 'My favourite season is… because…']],
+    dates: [['When\'s your birthday?', 'My birthday is on the … of …'], ['What day is today?', 'Today is…'], ['What day was yesterday?', 'Yesterday was…'],
+      ['Can you tell me what time it is?', 'It\'s… (o\'clock, half past…)'], ['What time do you have dinner?', 'I have dinner at…'], ['When\'s your mum\'s birthday?', 'Her birthday is in… / on the…']],
+    past: [['What did you do yesterday?', 'Yesterday I… (went, played, watched…)'], ['Where did you go last weekend?', 'Last weekend I went to…'], ['What did you eat for breakfast today?', 'I ate…'],
+      ['Did you watch TV yesterday?', 'Yes, I did. / No, I didn\'t.'], ['What did you do last summer?', 'Last summer I…'], ['Who did you play with yesterday?', 'I played with…']]
+  };
+  var PAST_WORDS = /\b(was|were|went|did|didn't|played|watched|ate|saw|had|got|visited|made|took|bought|swam|read|stayed|walked|went|came|ran|drank|slept|wrote|danced|cooked|cleaned|helped|listened|studied|climbed|painted|jumped|rode|drew|flew|gave|found|sang|woke|[a-z]+ed)\b/i;
+
+  /* ---------- Desafío adulto ---------- */
+  function adultChallenge() { var a = 6 + rnd(4), b = 6 + rnd(4); return { a: a, b: b, ans: a * b }; }
+
+  return {
+    rnd: rnd, pick: pick, shuffle: shuffle, uniq: uniq, pickFresh: pickFresh,
+    Q: Q, TOPICS: TOPICS, QW: QW, WH: WH, YN: YN, WHY: WHY,
+    builderTask: builderTask, checkBuild: checkBuild, detectiveTask: detectiveTask, errorTask: errorTask,
+    timePhrase: timePhrase, digital: digital, clockTask: clockTask, dateTask: dateTask, dayTask: dayTask, prepTimeTask: prepTimeTask,
+    ORD: ORD, ordShort: ordShort, MONTHS: MONTHS, MONTHS_ES: MONTHS_ES, DAYS: DAYS,
+    PLACES: PLACES, SLOTS: SLOTS, SLOT_KEYS: SLOT_KEYS, newMap: newMap, followTask: followTask, explainTask: explainTask,
+    newStreet: newStreet, streetTask: streetTask, isTrue: isTrue, rel: rel,
+    VERBS: VERBS, IRREG: IRREG, pastTask: pastTask, beTask: beTask,
+    DECKS: DECKS, CARDS: CARDS, memoryPairs: memoryPairs,
+    EXAM: EXAM, PAST_WORDS: PAST_WORDS, adultChallenge: adultChallenge
+  };
+})();
+if (typeof module !== 'undefined') module.exports = NT;
+</script>
+<script>/* ===== Nutti Trinity · interfaz ===== */
+var A = (function () {
+  'use strict';
+  var P = 'nutti_trinity_isa_';
+  var NAME = ['Isa', 'Pichis'];
+  var ROUND = 8;
+
+  /* ---------- guardado ---------- */
+  function load(k, d) { try { var v = localStorage.getItem(P + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(P + k, JSON.stringify(v)); } catch (e) { } }
+  var nuts = load('nuts', 0);
+  var stats = load('stats', {});
+  var prefs = load('prefs', { trap: true, topic: 'all', clockLvl: 2 });
+  var known = load('known', {});
+  function stat(area, ok) { var s = stats[area] || { ok: 0, n: 0 }; s.n++; if (ok) s.ok++; stats[area] = s; save('stats', stats); }
+  function addNuts(n) {
+    nuts += n; save('nuts', nuts);
+    var el = document.getElementById('nuts'); if (el) { el.textContent = '🌰 ' + nuts; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  }
+  function nick() { return NT.pick(NAME); }
+
+  /* ---------- voz ---------- */
+  var VOICE_KEY = 'nutti_u2_voice';
+  var voices = [], voice = null;
+  function voiceScore(v) {
+    var s = 0, n = (v.name || '').toLowerCase();
+    if (/^en/i.test(v.lang)) s += 50; else return -999;
+    if (/en[-_]gb/i.test(v.lang)) s += 25; else if (/en[-_]us/i.test(v.lang)) s += 12;
+    if (/natural|neural|online|enhanced|premium|google/.test(n)) s += 30;
+    if (/compact/.test(n)) s -= 30;
+    if (/female|samantha|serena|libby|sonia|maisie|kate|susan|aria|jenny|emma/.test(n)) s += 6;
+    return s;
+  }
+  function loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    voices = speechSynthesis.getVoices().filter(function (v) { return /^en/i.test(v.lang); }).sort(function (a, b) { return voiceScore(b) - voiceScore(a); });
+    var saved = null; try { saved = localStorage.getItem(VOICE_KEY); } catch (e) { }
+    voice = voices.filter(function (v) { return v.name === saved; })[0] || voices[0] || null;
+  }
+  if ('speechSynthesis' in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+  function speak(text, rate) {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text.replace(/___/g, 'blank'));
+      if (voice) { u.voice = voice; u.lang = voice.lang; } else u.lang = 'en-GB';
+      u.rate = rate || 0.9; u.pitch = 1.28;
+      speechSynthesis.speak(u);
+    } catch (e) { }
+  }
+  function spk(t) { return '<button class="iconbtn" style="display:inline-grid;width:38px;height:38px;font-size:17px;vertical-align:middle" onclick="A.say(' + reg(t) + ')" aria-label="Escuchar">🔊</button>'; }
+  // registro de textos para onclick sin comillas
+  var REG = [];
+  function reg(t) { REG.push(t); return REG.length - 1; }
+
+  /* ---------- confetti ---------- */
+  function confetti(n) {
+    var cols = ['#F6C453', '#E98A5B', '#7DB8A5', '#9C8BD8', '#C7792E', '#3E9B57'];
+    for (var i = 0; i < (n || 40); i++) {
+      var d = document.createElement('div'); d.className = 'cf';
+      d.style.left = Math.random() * 100 + 'vw'; d.style.background = NT.pick(cols);
+      d.style.animationDuration = (1.4 + Math.random() * 1.4) + 's'; d.style.animationDelay = (Math.random() * .3) + 's';
+      document.body.appendChild(d); setTimeout(function (x) { x.remove(); }.bind(null, d), 3200);
+    }
+  }
+
+  /* ---------- helpers de vista ---------- */
+  var IMG = window.NUTTI_IMG;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function nutti(html, kind) { return '<div class="say fade"><div class="avatar"><img src="' + IMG + '" alt="Nutti"></div><div class="bubble ' + (kind || '') + '">' + html + '</div></div>'; }
+  function setSay(html, kind) { var el = $('fb') || $('say'); if (el) el.innerHTML = nutti(html, kind); }
+  function render(html) {
+    REG = []; $('main').innerHTML = html; window.scrollTo(0, 0);
+    var s = $('say'); if (s && !$('fb')) s.insertAdjacentHTML('afterend', '<div id="fb"></div>');
+  }
+  function chips(list, cur, fn) { return '<div class="chips">' + list.map(function (c) { return '<button class="chip' + (c[0] === cur ? ' on' : '') + '" onclick="A.' + fn + '(\'' + c[0] + '\')">' + c[1] + '</button>'; }).join('') + '</div>'; }
+  function prog() {
+    var s = '<div class="prog">';
+    for (var i = 0; i < ROUND; i++) s += '<i class="' + (i < R.res.length ? (R.res[i] ? 'ok' : 'meh') : i === R.res.length ? 'cur' : '') + '"></i>';
+    return s + '</div>';
+  }
+  function setHeader(sub) {
+    $('back').style.visibility = cur === 'home' ? 'hidden' : 'visible';
+    $('sub').textContent = sub || 'Preparación Trinity · Grade 3';
+  }
+
+  /* ---------- rondas ---------- */
+  var R = null, cur = 'home';
+  function startRound(area, gen, view) { R = { area: area, gen: gen, view: view, res: [], first: true, done: false, t: null }; next(); }
+  function next() {
+    if (R.res.length >= ROUND) return results();
+    R.first = true; R.done = false; R.hints = 0; R.t = R.gen(); R.view();
+  }
+  function answer(ok, msgOk, msgBad, kindBad) {
+    stat(R.area, ok);
+    if (ok) {
+      if (R.done) return;
+      R.done = true; R.res.push(R.first);
+      if (R.first) addNuts(1);
+      confetti(R.first ? 36 : 14);
+      setSay((R.first ? '<b>' + NT.pick(['¡Genia', '¡Bien ahí', '¡Excelente', '¡Muy bien', '¡Crack']) + ', ' + nick() + '!</b> +1 🌰 ' : '<b>¡Ahí está!</b> Lo encontraste. ') + (msgOk || ''), 'ok');
+      var nb = $('nextbtn'); if (nb) nb.style.display = '';
+    } else {
+      R.first = false;
+      setSay(msgBad || 'Mmm, todavía no. Leelo de nuevo despacito 🐿️', kindBad || 'bad');
+    }
+  }
+  function nextBtn() { return '<div class="row c"><button id="nextbtn" class="btn green" style="display:none" onclick="A.next()">Siguiente ➜</button></div>'; }
+  function results() {
+    var ok = R.res.filter(Boolean).length;
+    if (ok === ROUND) { addNuts(3); confetti(90); }
+    var msg = ok === ROUND ? '¡Ronda perfecta! Te ganaste 3 avellanas extra 🌰🌰🌰' : ok >= 6 ? '¡Muy buena ronda! Cada vez te sale mejor.' : ok >= 4 ? 'Vas bien. Lo que costó es justo lo que conviene repasar 💪' : 'Esta ronda fue difícil. ¡Los errores son pistas para aprender! Probemos otra.';
+    render('<div class="card center fade"><h2 class="big">🏁 ¡Terminaste la ronda!</h2><p class="prompt">' + ok + ' de ' + ROUND + ' a la primera</p>' + prog() + '</div>' + nutti(msg, 'ok') +
+      '<div class="row c"><button class="btn" onclick="A.again()">🔁 Otra ronda</button><button class="btn soft" onclick="A.go(\'home\')">🏠 Inicio</button></div>');
+  }
+  var againFn = null;
+
+  /* =========================================================
+     HOME
+     ========================================================= */
+  var MODS = [
+    ['build', '🧩', 'Armá la pregunta', 'Ordená las fichas y preguntale a Nutti', '#FCE3A6', '¡Clave!'],
+    ['detective', '🕵️', 'Detective de preguntas', 'Mirás la respuesta y adivinás la pregunta', '#D9EEF7', ''],
+    ['errors', '🔍', 'Cazá el error', '¿Cuál pregunta está bien armada?', '#F7D9D0', ''],
+    ['time', '🕐', 'Horas y fechas', 'Relojes, fechas, días, in/on/at', '#E3F0D4', 'Repasar'],
+    ['dirs', '🗺️', 'Direcciones', 'Mapas, left/right, next to, opposite', '#E6E0F6', 'Repasar'],
+    ['past', '⏪', 'El pasado', 'went, saw, was/were y Did…?', '#FBE0C6', 'Repasar'],
+    ['memory', '🧠', 'Memoria', 'Encontrá las parejas', '#F2E3F2', ''],
+    ['cards', '🃏', 'Tarjetas', 'Frases para estudiar y repasar', '#E0EDE8', ''],
+    ['exam', '🎤', 'Simulacro Trinity', 'Nutti es tu examinador', '#FFE1E1', '']
+  ];
+  function home() {
+    var hello = NT.pick(['¡Hola, ' + nick() + '! ¿Practicamos para el Trinity? 🌰', '¡Hola, ' + nick() + '! Hoy vamos a ser detectives de preguntas 🕵️', '¡Hola, ' + nick() + '! Cada pregunta que armás es una avellana para mi colección 🐿️']);
+    render(nutti(hello) +
+      '<div class="card focus"><h3>🎯 Lo que dijo la seño para repasar</h3><ul><li><b>Asking questions</b> — armar preguntas (¡lo más importante!)</li><li><b>Time &amp; date</b> — la hora y las fechas</li><li><b>Giving directions</b> — explicar cómo llegar</li><li><b>The past</b> — contar qué hiciste</li></ul></div>' +
+      '<div class="grid">' + MODS.map(function (m) {
+        return '<button class="mod" onclick="A.go(\'' + m[0] + '\')">' + (m[5] ? '<span class="tag">' + m[5] + '</span>' : '') + '<span class="ico" style="background:' + m[4] + '">' + m[1] + '</span><span><h3>' + m[2] + '</h3><p>' + m[3] + '</p></span></button>';
+      }).join('') + '</div>' +
+      '<p class="muted center" style="margin-top:20px">En el Trinity vos también tenés que <b>hacerle preguntas al examinador</b>. ¡Por eso practicamos tanto armar preguntas!</p>');
+  }
+
+  /* =========================================================
+     ARMÁ LA PREGUNTA (builder) — también lo usan detective, pasado y simulacro
+     ========================================================= */
+  var SAND = '<div class="sandwich"><span style="background:#FCE3A6">🔑 palabra pregunta</span><span style="background:#F9D2BE">🧑‍🍳 ayudante</span><span style="background:#D6ECE4">👤 quién</span><span style="background:#E3DDF6">🏃 acción + resto</span></div>';
+  var B = null; // estado del armado actual
+  function builderHTML(task, title) {
+    B = { task: task, picked: [] };
+    var it = task.item;
+    return '<div class="card fade">' + (title || '') + SAND +
+      '<div id="slot" class="slot"><span class="ph">Tocá las fichas en orden…</span></div>' +
+      '<div id="bank" class="bank">' + task.tiles.map(function (t, i) { return '<button class="tile" id="tile' + i + '" onclick="A.tap(' + i + ')">' + esc(t.w) + '</button>'; }).join('') + '</div>' +
+      '<div class="row c"><button class="btn soft small" onclick="A.undo()">↩️ Borrar una</button><button class="btn soft small" onclick="A.clearB()">🧹 Borrar todo</button><button class="btn soft small" onclick="A.hint()">💡 Pista</button><button class="btn" onclick="A.check()">✅ Comprobar</button></div></div>';
+  }
+  function drawSlot(cls) {
+    var s = $('slot'); if (!s) return;
+    s.className = 'slot' + (cls ? ' ' + cls : '');
+    s.innerHTML = B.picked.length ? B.picked.map(function (i, k) { return '<button class="tile' + (B.goodUpTo > k ? ' good' : '') + '" onclick="A.untap(' + k + ')">' + esc(B.task.tiles[i].w) + '</button>'; }).join('') : '<span class="ph">Tocá las fichas en orden…</span>';
+    B.task.tiles.forEach(function (t, i) { var el = $('tile' + i); if (el) el.classList.toggle('used', B.picked.indexOf(i) >= 0); });
+  }
+  function tap(i) { if (B.solved) return; if (B.picked.indexOf(i) < 0) { B.picked.push(i); B.goodUpTo = 0; drawSlot(); } }
+  function untap(k) { if (B.solved) return; B.picked.splice(k, 1); B.goodUpTo = 0; drawSlot(); }
+  function undo() { if (B.solved) return; B.picked.pop(); B.goodUpTo = 0; drawSlot(); }
+  function clearB() { if (B.solved) return; B.picked = []; B.goodUpTo = 0; drawSlot(); }
+  var RULE_HINT = {
+    do: 'Es presente y la persona es <b>you</b> (o I, we, they). ¿Qué ayudante usás con you?',
+    does: 'Es presente y la persona es <b>una sola</b> que no sos vos (your mum, your dad, it). Ese ayudante se lleva la "s" 😉',
+    did: 'Es <b>pasado</b>: el ayudante es la mochila del pasado 🎒. Y como la mochila carga el pasado, el verbo va en su forma normal.',
+    be: 'Acá no hay acción: se usa <b>is</b> o <b>are</b>, que no necesitan ayudante. Van justo después de la palabra pregunta, antes de la persona.',
+    bepast: 'Es pasado con <b>was</b> o <b>were</b>. Van después de la palabra pregunta y antes de la persona. ¿Una persona (was) o you/varias (were)?',
+    can: '<b>Can</b> es un superhéroe 🦸: no necesita ayudante. Va antes de la persona y después el verbo solito.'
+  };
+  function hint() {
+    if (!B || B.solved) return;
+    var it = B.task.item; B.hints = (B.hints || 0) + 1; if (R) R.first = false;
+    var n = Math.min(B.hints, 3);
+    var qw = NT.QW[it.qw];
+    var msg;
+    if (n === 1) msg = '<b>Pista 1:</b> Primero pensá qué querés saber: <b>' + esc(it.es) + '</b>. ' + (NT.WH.indexOf(it.qw) >= 0 ? 'Estás preguntando por <b>' + qw.what + '</b>. ¿Qué palabra pregunta sirve para eso? (mirá el 🔑 llavero en las Tarjetas si no te acordás)' : 'Es una pregunta de <b>sí o no</b>: no lleva palabra pregunta, arranca directo con el ayudante.');
+    else if (n === 2) msg = '<b>Pista 2:</b> ' + RULE_HINT[it.rule];
+    else msg = '<b>Pista 3:</b> Armá el sánguche de miga por pisos: 🔑 → 🧑‍🍳 → 👤 → 🏃. El "?" siempre va pegado a la <b>última</b> ficha.' + (B.task.tiles.some(function (t) { return !t.ok; }) ? ' Y ojo: ¡hay una ficha trampa que sobra! 🪤' : '');
+    setSay(msg, 'hint');
+  }
+  function check() {
+    if (!B || B.solved) return;
+    var words = B.picked.map(function (i) { return B.task.tiles[i].w; });
+    var ans = B.task.answer;
+    if (!words.length) return setSay('Tocá las fichas para armar la pregunta 🧩', 'hint');
+    if (NT.checkBuild(B.task, words)) {
+      B.solved = true; B.goodUpTo = words.length; drawSlot('ok');
+      var it = B.task.item;
+      setTimeout(function () { speak(it.q); }, 150);
+      setTimeout(function () { speak(it.a); }, 150 + it.q.length * 75);
+      if (B.onSolve) return B.onSolve();
+      answer(true, '<br>Nutti te contesta: <span class="en">“' + esc(it.a) + '”</span> ' + spk(it.a));
+      return;
+    }
+    // diagnóstico
+    var k = 0; while (k < words.length && words[k] === ans[k]) k++;
+    B.goodUpTo = k; drawSlot('bad');
+    var usedTrap = B.picked.some(function (i) { return !B.task.tiles[i].ok; });
+    var it2 = B.task.item, msg;
+    if (usedTrap) msg = 'Usaste la <b>ficha trampa</b> 🪤 (“' + esc(B.task.tiles.filter(function (t) { return !t.ok; })[0].w) + '”). ' + RULE_HINT[it2.rule];
+    else if (k === 0) msg = 'La primera ficha no va ahí. ' + (NT.WH.indexOf(it2.qw) >= 0 ? '¿Qué querés saber? ' + NT.QW[it2.qw].what.charAt(0).toUpperCase() + NT.QW[it2.qw].what.slice(1) + ' → ¿qué palabra pregunta es?' : 'Es de sí o no: empieza con el ayudante, no con la persona.');
+    else if (words.length < ans.length && k === words.length) msg = '¡Vas muy bien! Las ' + k + ' fichas verdes están perfectas. Te falta terminar 💪';
+    else msg = 'Las fichas en <b>verde</b> (' + k + ') están bien ✔️. La que sigue no va en ese lugar. ' + (k <= 2 ? 'Acordate del orden: 🔑 → 🧑‍🍳 → 👤 → 🏃' : 'Fijate dónde va el “?”: siempre al final.');
+    stat(R ? R.area : 'build', false); if (R) R.first = false;
+    setSay(msg, 'bad');
+    if (B.onFail) B.onFail();
+  }
+
+  var bOpts = { rules: null, top: '' };
+  function buildScreen() {
+    var rules = bOpts.rules, top = bOpts.top || '';
+    if (!rules) { cur = 'build'; setHeader('🧩 Armá la pregunta'); againFn = buildScreen; }
+    startRound(rules ? 'pastq' : 'build', function () { return NT.builderTask({ topic: rules ? 'all' : prefs.topic, trap: prefs.trap, rules: rules }); }, function () {
+      var it = R.t.item, tp = NT.TOPICS[it.t];
+      render(top + prog() +
+        (rules ? '' : '<div class="lbl">Tema</div>' + chips([['all', '🌈 Todos']].concat(Object.keys(NT.TOPICS).map(function (k) { return [k, NT.TOPICS[k].ico + ' ' + NT.TOPICS[k].es]; })), prefs.topic, 'setTopic')) +
+        chips([['on', '🪤 Con ficha trampa'], ['off', 'Sin trampa']], prefs.trap ? 'on' : 'off', 'setTrap') +
+        '<div id="say">' + nutti('Armá la pregunta con las fichas 🧩. Si te trabás, pedime una 💡 pista.') + '</div>' +
+        builderHTML(R.t, '<p class="prompt">🎯 Querés saber <b>' + esc(it.es) + '</b>.<span class="es">¿Cómo le preguntás a Nutti en inglés? · ' + tp.ico + ' ' + tp.name + '</span></p>') + nextBtn());
+    });
+  }
+  function setTopic(t) { prefs.topic = t; save('prefs', prefs); buildScreen(); }
+  function setTrap(t) { prefs.trap = t === 'on'; save('prefs', prefs); bOpts.rules ? pastScreen('questions') : buildScreen(); }
+
+  /* =========================================================
+     DETECTIVE
+     ========================================================= */
+  function detectiveScreen() {
+    cur = 'detective'; setHeader('🕵️ Detective de preguntas'); againFn = detectiveScreen;
+    startRound('detective', NT.detectiveTask, function () {
+      var t = R.t, it = t.item;
+      var ans = esc(it.a).replace(esc(it.k), '<mark>' + esc(it.k) + '</mark>');
+      R.step = 1;
+      render(prog() + '<div id="say">' + nutti('Nutti contestó algo… ¿cuál fue la pregunta? 🔎<br>La parte en <mark>amarillo</mark> es la información que te dio.') + '</div>' +
+        '<div class="answer-card en">🐿️ “' + ans + '” ' + spk(it.a) + '</div>' +
+        '<div id="step"><p class="prompt">Paso 1: ¿con qué palabra empieza la pregunta?</p><div class="opts two">' +
+        t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.detPick(' + i + ')">' + esc(o) + '<small>' + NT.QW[o].es + '</small></button>'; }).join('') +
+        '</div><div class="row c"><button class="btn soft small" onclick="A.detHint()">💡 Pista</button></div></div>' + nextBtn());
+    });
+  }
+  function detHint() {
+    var it = R.t.item; R.first = false;
+    setSay(NT.WH.indexOf(it.qw) >= 0 ? 'Mirá la parte amarilla: <b>“' + esc(it.k) + '”</b>. ¿Es un lugar 📍, una hora ⏰, un día 📅, una persona 👤, cuántas veces 🔁, una cosa o acción ❓…?' : 'Mirá cómo empieza la respuesta: <b>“' + esc(it.k) + '”</b>. Si contesta con Yes/No, la pregunta arranca con el mismo ayudante que aparece en la respuesta.', 'hint');
+  }
+  function detPick(i) {
+    var t = R.t, it = t.item, o = t.options[i];
+    if (o === t.answer) {
+      $('o' + i).classList.add('ok'); stat('detective', true);
+      setSay('¡Eso! <b>' + esc(o) + '</b> pregunta por ' + NT.QW[o].what + '. Ahora el <b>paso 2</b>: armá la pregunta completa 🧩', 'ok');
+      var tk = it.q.split(' ');
+      var task = { item: it, answer: tk, tiles: NT.shuffle(tk.map(function (w, k) { return { w: w, id: 'w' + k, ok: true }; }).concat(it.trap ? [{ w: it.trap, id: 'trap', ok: false }] : [])) };
+      $('step').innerHTML = '<p class="prompt">Paso 2: armá la pregunta</p>' + builderHTML(task);
+      B.onSolve = function () { answer(true, '<br>La pregunta era: <span class="en">“' + esc(it.q) + '”</span> ' + spk(it.q)); };
+    } else {
+      $('o' + i).classList.add('bad'); R.first = false; stat('detective', false);
+      var msg = NT.WH.indexOf(o) >= 0 ? '<b>' + esc(o) + '</b> pregunta por ' + NT.QW[o].what + '. ¿La parte amarilla es eso? Miralo otra vez 🔎' : '<b>' + esc(o) + '</b> es para preguntas de sí o no ' + (NT.WH.indexOf(t.answer) >= 0 ? '— pero Nutti no contestó con Yes ni No 😉' : 'con otro tiempo o persona. Mirá el ayudante que aparece en la respuesta.');
+      setSay(msg, 'bad');
+    }
+  }
+
+  /* =========================================================
+     CAZÁ EL ERROR
+     ========================================================= */
+  function errorsScreen() {
+    cur = 'errors'; setHeader('🔍 Cazá el error'); againFn = errorsScreen;
+    startRound('errors', NT.errorTask, function () {
+      var t = R.t;
+      render(prog() + '<div id="say">' + nutti('Tres ardillitas armaron la misma pregunta, pero <b>solo una</b> la armó bien. ¿Cuál es? 🔍<br><span class="muted">Querían saber ' + esc(t.item.es) + '.</span>') + '</div>' +
+        '<div class="opts">' + t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.errPick(' + i + ')">' + esc(o.s) + '</button>'; }).join('') + '</div>' + nextBtn());
+    });
+  }
+  function errPick(i) {
+    var t = R.t, o = t.options[i];
+    if (R.done) return;
+    if (o.ok) {
+      $('o' + i).classList.add('ok');
+      t.options.forEach(function (x, k) { if (!x.ok) $('o' + k).classList.add('dim'); });
+      var others = t.options.filter(function (x) { return !x.ok; }).map(function (x) { return '❌ <i>' + esc(x.s) + '</i> → ' + NT.WHY[x.why]; }).join('<br>');
+      answer(true, '<br><span class="muted">Los errores de las otras:</span><br>' + others);
+      speak(o.s);
+    } else {
+      $('o' + i).classList.add('bad');
+      answer(false, null, '¡Esa tiene un error escondido! 🕵️ ' + NT.WHY[o.why]);
+    }
+  }
+
+  /* =========================================================
+     HORAS Y FECHAS
+     ========================================================= */
+  function clockSVG(h, m, size, halves) {
+    var s = '<svg viewBox="0 0 200 200" width="' + (size || 200) + '" height="' + (size || 200) + '" aria-label="reloj">';
+    s += '<circle cx="100" cy="100" r="94" fill="#fff" stroke="#6B4423" stroke-width="6"/>';
+    if (halves) {
+      s += '<path d="M100 100 L100 8 A92 92 0 0 1 100 192 Z" fill="#E3F4E6"/><path d="M100 100 L100 192 A92 92 0 0 1 100 8 Z" fill="#FBE4DE"/>';
+      s += '<text x="130" y="128" font-size="13" font-weight="800" fill="#3E9B57" text-anchor="middle">PAST</text><text x="70" y="128" font-size="13" font-weight="800" fill="#D2553F" text-anchor="middle">TO</text>';
+    }
+    for (var i = 0; i < 60; i++) { var a = i * 6 * Math.PI / 180, r1 = i % 5 ? 84 : 78; s += '<line x1="' + (100 + r1 * Math.sin(a)) + '" y1="' + (100 - r1 * Math.cos(a)) + '" x2="' + (100 + 89 * Math.sin(a)) + '" y2="' + (100 - 89 * Math.cos(a)) + '" stroke="#9A6334" stroke-width="' + (i % 5 ? 1.2 : 3) + '"/>'; }
+    for (var n = 1; n <= 12; n++) { var b = n * 30 * Math.PI / 180; s += '<text x="' + (100 + 64 * Math.sin(b)) + '" y="' + (100 - 64 * Math.cos(b) + 7) + '" font-size="20" font-family="Fredoka" font-weight="600" fill="#4A2E17" text-anchor="middle">' + n + '</text>'; }
+    var ha = ((h % 12) + m / 60) * 30 * Math.PI / 180, ma = m * 6 * Math.PI / 180;
+    s += '<line x1="100" y1="100" x2="' + (100 + 46 * Math.sin(ha)) + '" y2="' + (100 - 46 * Math.cos(ha)) + '" stroke="#4A2E17" stroke-width="9" stroke-linecap="round"/>';
+    s += '<line x1="100" y1="100" x2="' + (100 + 74 * Math.sin(ma)) + '" y2="' + (100 - 74 * Math.cos(ma)) + '" stroke="#C7792E" stroke-width="6" stroke-linecap="round"/>';
+    s += '<circle cx="100" cy="100" r="7" fill="#4A2E17"/></svg>';
+    return s;
+  }
+  var tMode = 'read';
+  function timeScreen(mode) {
+    cur = 'time'; if (mode) tMode = mode; setHeader('🕐 Horas y fechas'); againFn = function () { timeScreen(); };
+    var gens = {
+      read: function () { return NT.clockTask(prefs.clockLvl); }, pick: function () { return NT.clockTask(prefs.clockLvl); },
+      date: NT.dateTask, day: NT.dayTask, prep: NT.prepTimeTask
+    };
+    startRound({ read: 'clock', pick: 'clock', date: 'date', day: 'day', prep: 'prepT' }[tMode], gens[tMode], function () {
+      var t = R.t, top = prog() + chips([['read', '🕐 ¿Qué hora es?'], ['pick', '🔎 Elegí el reloj'], ['date', '📅 Fechas'], ['day', '📆 Ayer / mañana'], ['prep', '🧱 in / on / at']], tMode, 'timeMode');
+      if (tMode === 'read' || tMode === 'pick') top += chips([['1', 'En punto y media'], ['2', '+ y cuarto / menos cuarto'], ['3', 'De a 5 minutos']], String(prefs.clockLvl), 'clockLvl');
+      var body = '';
+      if (tMode === 'read') {
+        body = '<div id="say">' + nutti('<b>What time is it?</b> ' + spk('What time is it?') + ' Mirá bien las dos agujas.') + '</div><div class="card"><div class="svgbox" id="clk">' + clockSVG(t.h, t.m, 220) + '</div>' +
+          '<div class="opts two">' + t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.tPick(' + i + ')">It\'s ' + o.p + '.</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.tHint()">💡 Pista</button></div></div>';
+      } else if (tMode === 'pick') {
+        body = '<div id="say">' + nutti('¿Qué reloj dice <b>“It\'s ' + t.phrase + '”</b>? ' + spk('It\'s ' + t.phrase)) + '</div><div class="card"><div class="clocks" style="grid-template-columns:repeat(2,1fr)">' +
+          t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.tPick(' + i + ')">' + clockSVG(o.h, o.m, 130) + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.tHint()">💡 Pista</button></div></div>';
+      } else if (tMode === 'date') {
+        body = '<div id="say">' + nutti('<b>What\'s the date?</b> ' + spk('What\'s the date?') + ' Así lo escribimos en Argentina 🇦🇷. ¿Cómo se dice en inglés?') + '</div><div class="card center"><div style="display:inline-block;background:#fff;border:3px solid var(--bad);border-radius:16px;overflow:hidden;min-width:150px"><div style="background:var(--bad);color:#fff;font-weight:800;padding:4px">📅 FECHA</div><div class="fred" style="font-size:52px;padding:6px 18px">' + t.d + '/' + t.mo + '</div></div>' +
+          '<div class="opts">' + t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.tPick(' + i + ')">It\'s ' + o.p + '.</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.tHint()">💡 Pista</button></div></div>';
+      } else if (tMode === 'day') {
+        body = '<div id="say">' + nutti('<b>Today is ' + t.today + '.</b> ' + esc(t.q) + ' ' + spk('Today is ' + t.today + '. ' + t.q)) + '</div><div class="card"><div class="opts two">' +
+          t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.tPick(' + i + ')">' + o.p + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.tHint()">💡 Pista</button></div></div>';
+      } else {
+        body = '<div id="say">' + nutti('¿Qué palabrita va en el espacio? 🧱') + '</div><div class="card"><p class="prompt">' + esc(t.s).replace('___', '<b>____</b>') + ' ' + spk(t.s) + '</p><div class="opts" style="grid-template-columns:repeat(3,1fr)">' +
+          t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.tPick(' + i + ')">' + o + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.tHint()">💡 Pista</button></div></div>';
+      }
+      render(top + body + nextBtn());
+    });
+  }
+  function timeMode(m) { timeScreen(m); }
+  function clockLvl(l) { prefs.clockLvl = +l; save('prefs', prefs); timeScreen(); }
+  function tHint() {
+    var t = R.t; R.first = false;
+    if (tMode === 'read' || tMode === 'pick') {
+      if ($('clk')) $('clk').innerHTML = clockSVG(t.h, t.m, 220, true);
+      setSay('🍕 Pensá el reloj como una pizza cortada al medio. Mirá primero la <b>aguja larga</b>: si está en la mitad <b style="color:var(--ok)">derecha</b>, ya <b>pasó</b> la hora → <b>past</b>. Si está en la mitad <b style="color:var(--bad)">izquierda</b>, <b>falta</b> para la próxima → <b>to</b>. Un cuarto de pizza = <b>quarter</b>, media pizza = <b>half</b>. Después mirá la <b>aguja corta</b>: con <i>to</i>, ¿a qué número se está acercando?', 'hint');
+    } else if (tMode === 'date') {
+      setSay('En Argentina escribimos primero el <b>día</b> y después el <b>mes</b>. ¿Cuál de los dos números es el día? 🤔<br>Para el día se usan números de podio 🏆: <b>1st</b> first, <b>2nd</b> second, <b>3rd</b> third tienen medalla especial; casi todos los demás llevan <b>th</b> (fourth, fifth…). ¡Ojo con thirteenth (13) y thirtieth (30)!', 'hint');
+    } else if (tMode === 'day') {
+      setSay('La semana es como una ronda 🔄: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday… y vuelve a empezar. <b>Yesterday</b> = un pasito para atrás ⬅️. <b>Tomorrow</b> = un pasito para adelante ➡️.', 'hint');
+    } else {
+      setSay('Pensá en cajas de distinto tamaño 📦: <b>IN</b> es la caja grande (meses, estaciones, la mañana/la tarde). <b>ON</b> es para días, como apoyar algo en un día del calendario (Monday, my birthday, the 5th of May). <b>AT</b> es el puntito exacto, como un dardo 🎯 (una hora, at night, at the weekend).', 'hint');
+    }
+  }
+  function tPick(i) {
+    if (R.done) return;
+    var t = R.t, o = t.options[i], ok = tMode === 'prep' ? o === t.ans : o.ok;
+    $('o' + i).classList.add(ok ? 'ok' : 'bad');
+    if (ok) {
+      var said = tMode === 'prep' ? t.s.replace('___', t.ans) : tMode === 'day' ? o.p : 'It\'s ' + (o.p || t.phrase) + '.';
+      speak(said);
+      answer(true, '<span class="en">“' + esc(said) + '”</span>' + (tMode === 'date' ? ' <span class="muted">(' + t.d + ' de ' + NT.MONTHS_ES[t.mo - 1] + ')</span>' : ''));
+    } else {
+      var why = 'Mmm, ese no es. ';
+      if (tMode === 'read' || tMode === 'pick') {
+        var p = o.p || '';
+        why += (/ to /.test(p) && t.m < 30 && t.m > 0) || (/ past /.test(p) && t.m > 30) ? 'Mirá la aguja larga: ¿está del lado del <b>past</b> o del <b>to</b>? 🍕' : (/ to /.test(p) && t.m > 30) ? 'Con <b>to</b> decimos la hora que <b>viene</b>, no la que ya pasó. ¿A qué número se acerca la aguja corta?' : 'Revisá cuál es la aguja corta (la hora) y cuál la larga (los minutos) ⏱️';
+      } else if (tMode === 'date') {
+        why += o.d === t.mo && o.mo === t.d ? '¡Cuidado! Ese lo leíste al revés: en Argentina el primer número es el <b>día</b> 🇦🇷' : 'Revisá el número del día y el mes 🔎';
+      } else if (tMode === 'day') {
+        why += 'Hoy es <b>' + t.today + '</b>. ' + (t.kind === 'yesterday' ? 'Yesterday es un día <b>antes</b>.' : 'Tomorrow es un día <b>después</b>.');
+      } else why += '¿Es una hora, un día o algo más grande como un mes o una estación? 📦';
+      answer(false, null, why);
+    }
+  }
+
+  /* =========================================================
+     DIRECCIONES
+     ========================================================= */
+  var dMode = 'follow', MAP = null, STREET = null;
+  function bldSVG(k, s, p, extra) {
+    var words = p.n.split(' '), cx = s.x + s.w / 2, cy = s.y + s.h / 2;
+    var lab = words.length > 1 ? '<text x="' + cx + '" y="' + (cy + 18) + '" font-size="10" text-anchor="middle" fill="#4A2E17" font-weight="700">' + words[0] + '</text><text x="' + cx + '" y="' + (cy + 29) + '" font-size="10" text-anchor="middle" fill="#4A2E17" font-weight="700">' + words.slice(1).join(' ') + '</text>' : '<text x="' + cx + '" y="' + (cy + 20) + '" font-size="11" text-anchor="middle" fill="#4A2E17" font-weight="700">' + p.n + '</text>';
+    return '<g class="bld ' + (extra || '') + '" id="b' + k + '" onclick="A.mapTap(\'' + k + '\')"><rect x="' + s.x + '" y="' + s.y + '" width="' + s.w + '" height="' + s.h + '" rx="10" fill="#FCE7C8" stroke="#6B4423" stroke-width="2.5"/><text x="' + cx + '" y="' + (cy + 1) + '" font-size="24" text-anchor="middle">' + p.e + '</text>' + lab + '</g>';
+  }
+  function mapSVG(target) {
+    var s = '<svg viewBox="0 0 340 400" id="mapsvg">';
+    s += '<rect x="0" y="0" width="340" height="400" fill="#E7F2DA" rx="16"/>';
+    s += '<rect x="140" y="0" width="60" height="400" fill="#CFC6B8"/><rect x="56" y="250" width="228" height="40" fill="#CFC6B8"/><rect x="56" y="110" width="228" height="40" fill="#CFC6B8"/>';
+    s += '<line x1="170" y1="0" x2="170" y2="400" stroke="#fff" stroke-width="3" stroke-dasharray="12 10"/>';
+    s += '<text x="146" y="246" font-size="10" font-weight="800" fill="#6B4423">1st corner</text><text x="146" y="106" font-size="10" font-weight="800" fill="#6B4423">2nd corner</text>';
+    s += '<circle cx="170" cy="270" r="9" fill="#F6C453" stroke="#6B4423" stroke-width="2"/><text x="170" y="274" font-size="11" text-anchor="middle" font-weight="800" fill="#4A2E17">1</text>';
+    s += '<circle cx="170" cy="130" r="9" fill="#F6C453" stroke="#6B4423" stroke-width="2"/><text x="170" y="134" font-size="11" text-anchor="middle" font-weight="800" fill="#4A2E17">2</text>';
+    NT.SLOT_KEYS.forEach(function (k) { s += bldSVG(k, NT.SLOTS[k], MAP[k], target === k ? 'pulse' : ''); });
+    s += '<g><circle cx="170" cy="384" r="13" fill="#C7792E"/><text x="170" y="390" font-size="16" text-anchor="middle">🐿️</text><text x="196" y="392" font-size="10" font-weight="800" fill="#4A2E17">You are here ⬆</text></g>';
+    s += '<circle id="walker" cx="170" cy="384" r="0" fill="#D2553F" stroke="#fff" stroke-width="3"/></svg>';
+    return s;
+  }
+  function walk(path) {
+    var w = $('walker'); if (!w) return; w.setAttribute('r', 9);
+    var seg = [], tot = 0; for (var i = 1; i < path.length; i++) { var L = Math.hypot(path[i][0] - path[i - 1][0], path[i][1] - path[i - 1][1]); seg.push(L); tot += L; }
+    var t0 = null, dur = tot * 7;
+    function step(ts) {
+      if (!t0) t0 = ts; var d = Math.min(1, (ts - t0) / dur) * tot, k = 0;
+      while (k < seg.length - 1 && d > seg[k]) { d -= seg[k]; k++; }
+      var f = Math.min(1, d / seg[k]), x = path[k][0] + (path[k + 1][0] - path[k][0]) * f, y = path[k][1] + (path[k + 1][1] - path[k][1]) * f;
+      w.setAttribute('cx', x); w.setAttribute('cy', y);
+      if ((ts - t0) < dur) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  function streetSVG(focus) {
+    var s = '<svg viewBox="0 0 360 236">', xs = [8, 96, 184, 272];
+    s += '<rect x="0" y="0" width="360" height="236" rx="16" fill="#E7F2DA"/><rect x="0" y="98" width="360" height="40" fill="#CFC6B8"/><line x1="0" y1="118" x2="360" y2="118" stroke="#fff" stroke-width="3" stroke-dasharray="12 10"/>';
+    STREET.forEach(function (row, r) {
+      row.forEach(function (p, c) {
+        var x = xs[c], y = r === 0 ? 8 : 146, f = focus && focus.indexOf(p) >= 0;
+        var words = p.n.split(' ');
+        s += '<g><rect x="' + x + '" y="' + y + '" width="80" height="82" rx="10" fill="' + (f ? '#FFE08A' : '#FCE7C8') + '" stroke="#6B4423" stroke-width="' + (f ? 4 : 2.5) + '"/><text x="' + (x + 40) + '" y="' + (y + 38) + '" font-size="28" text-anchor="middle">' + p.e + '</text>' +
+          (words.length > 1 ? '<text x="' + (x + 40) + '" y="' + (y + 60) + '" font-size="11" font-weight="700" text-anchor="middle" fill="#4A2E17">' + words[0] + '</text><text x="' + (x + 40) + '" y="' + (y + 73) + '" font-size="11" font-weight="700" text-anchor="middle" fill="#4A2E17">' + words.slice(1).join(' ') + '</text>' : '<text x="' + (x + 40) + '" y="' + (y + 64) + '" font-size="12" font-weight="700" text-anchor="middle" fill="#4A2E17">' + p.n + '</text>') + '</g>';
+      });
+    });
+    return s + '</svg>';
+  }
+  function dirsScreen(mode) {
+    cur = 'dirs'; if (mode) dMode = mode; setHeader('🗺️ Direcciones'); againFn = function () { dirsScreen(); };
+    MAP = NT.newMap(); STREET = NT.newStreet();
+    var gens = { follow: function () { return NT.followTask(MAP); }, explain: function () { return NT.explainTask(MAP); }, street: function () { if (R && R.res.length % 3 === 0) STREET = NT.newStreet(); return NT.streetTask(STREET); } };
+    startRound({ follow: 'follow', explain: 'explain', street: 'street' }[dMode], gens[dMode], function () {
+      var t = R.t, top = prog() + chips([['follow', '👣 Seguí el camino'], ['explain', '🗣️ Explicá el camino'], ['street', '🏘️ ¿Dónde está?']], dMode, 'dirsMode'), body;
+      if (dMode === 'follow') {
+        body = '<div id="say">' + nutti('Escuchá las indicaciones y tocá el lugar adonde llegás 👆<br><span class="en">“' + esc(t.say) + '”</span> ' + spk(t.say)) + '</div><div class="card"><div class="svgbox">' + mapSVG() + '</div><div class="row c" style="margin-top:8px"><button class="btn soft small" onclick="A.dHint()">💡 Pista</button></div></div>';
+      } else if (dMode === 'explain') {
+        body = '<div id="say">' + nutti('Un turista quiere ir al <b>' + esc(t.place.n) + '</b> ' + t.place.e + ' (el que titila). ¿Qué le decís? ' + spk('Can you tell me how to get to the ' + t.place.n + '?')) + '</div><div class="card"><div class="svgbox">' + mapSVG(t.slot) + '</div><div class="opts">' +
+          t.options.map(function (o, i) { return '<button class="opt" style="font-size:17px" id="o' + i + '" onclick="A.dPick(' + i + ')">' + esc(o.say) + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.dHint()">💡 Pista</button></div></div>';
+      } else {
+        body = '<div id="say">' + nutti('<b>' + esc(t.q) + '</b> ' + spk(t.q) + (t.isSentence ? '<br><span class="muted">Elegí la oración que es verdad.</span>' : '')) + '</div><div class="card"><div class="svgbox">' + streetSVG(t.focus) + '</div><div class="opts' + (t.isSentence ? '' : ' two') + '">' +
+          t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.dPick(' + i + ')">' + (t.isSentence ? esc(o.p) : o.p.e + ' ' + esc(o.p.n)) + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.dHint()">💡 Pista</button></div></div>';
+      }
+      render(top + body + nextBtn());
+    });
+  }
+  function dirsMode(m) { dirsScreen(m); }
+  function dHint() {
+    R.first = false;
+    if (dMode === 'street') setSay('<b>next to</b> 👫 = pegadito, del mismo lado de la calle. <b>opposite</b> ↔️ = enfrente, cruzando la calle (como cuando te sentás frente a alguien en la mesa). <b>between</b> 🥪 = en el medio de dos, como el dulce de leche entre las dos tapitas del alfajor.', 'hint');
+    else setSay('Poné el dedo en la ardillita 🐿️ de abajo y caminá hacia arriba, como en un videojuego. Levantá tu mano izquierda: el pulgar y el índice forman una <b>L</b> de <b>Left</b> 👈. Contá las esquinas amarillas: <b>1st corner</b> es la primera que encontrás.', 'hint');
+  }
+  function mapTap(k) {
+    if (cur !== 'dirs' || dMode !== 'follow' || R.done) return;
+    var t = R.t, el = $('b' + k);
+    if (k === t.slot) {
+      el.querySelector('rect').setAttribute('fill', '#BFE5C6'); walk(NT.SLOTS[k].path);
+      answer(true, 'Llegaste al <b>' + esc(t.place.n) + '</b> ' + t.place.e + ' 🎉');
+    } else {
+      el.querySelector('rect').setAttribute('fill', '#F6C9BD');
+      var s = NT.SLOTS[k], tg = NT.SLOTS[t.slot], msg;
+      if (s.side && tg.side && s.side !== tg.side && s.path[1][1] === tg.path[1][1]) msg = 'Llegaste a la altura justa, pero del <b>otro lado</b> de la calle. ¿Left o right? Hacé la L con tu mano 👈';
+      else if (/corner/.test(t.say) && !/Turn/.test(t.say) && !s.side) msg = 'En estas indicaciones nunca doblás: solo seguís derecho ⬆️';
+      else if (/Turn/.test(t.say) && s.side) msg = 'Las indicaciones dicen <b>Turn</b>: en algún momento tenés que doblar en una esquina ↩️';
+      else msg = 'Mmm, ahí no es. Leé despacito y contá las esquinas: ¿first o second? 🔢';
+      answer(false, null, msg);
+    }
+  }
+  function dPick(i) {
+    if (R.done) return;
+    var t = R.t, o = t.options[i];
+    $('o' + i).classList.add(o.ok ? 'ok' : 'bad');
+    if (o.ok) { speak(dMode === 'street' && t.isSentence ? o.p : dMode === 'explain' ? o.say : 'The ' + o.p.n + '.'); if (dMode === 'explain') walk(NT.SLOTS[t.slot].path); answer(true, ''); }
+    else answer(false, null, dMode === 'explain' ? 'Caminá esas indicaciones con el dedo desde la ardillita 🐿️: ¿llegás al lugar que titila?' : dMode === 'street' && /opposite/.test(t.q) ? '<b>Opposite</b> es <b>cruzando la calle</b>, justo enfrente ↔️' : /between/.test(t.q) ? '<b>Between</b> está en el medio de los dos amarillos, del mismo lado 🥪' : /next/.test(t.q) ? '<b>Next to</b> es pegadito, del mismo lado de la calle 👫' : 'Mirá el lugar amarillo y fijate qué tiene al lado, enfrente y alrededor 🔎');
+  }
+
+  /* =========================================================
+     EL PASADO
+     ========================================================= */
+  var pMode = 'verbs';
+  function pastScreen(mode) {
+    cur = 'past'; if (mode) pMode = mode; setHeader('⏪ El pasado'); againFn = function () { pastScreen(); };
+    bOpts.rules = null; bOpts.top = '';
+    if (pMode === 'questions') { bOpts.rules = ['did', 'bepast']; bOpts.top = chips([['verbs', '⏪ Elegí el pasado'], ['irreg', '🌀 Solo irregulares'], ['be', '🪞 was / were'], ['questions', '🧩 Preguntas en pasado']], 'questions', 'pastMode'); againFn = function () { pastScreen('questions'); }; buildScreen(); return; }
+    startRound(pMode === 'be' ? 'be' : 'past', pMode === 'be' ? NT.beTask : function () { return NT.pastTask(pMode === 'irreg'); }, function () {
+      var t = R.t, top = chips([['verbs', '⏪ Elegí el pasado'], ['irreg', '🌀 Solo irregulares'], ['be', '🪞 was / were'], ['questions', '🧩 Preguntas en pasado']], pMode, 'pastMode') + prog();
+      var sent = esc(t.sentence).replace('___', '<b>____</b>' + (t.base ? ' <span class="muted">(' + esc(t.base) + ')</span>' : ''));
+      render(top + '<div id="say">' + nutti(pMode === 'be' ? '¿<b>was</b> o <b>were</b>? 🪞' : '¿Cómo queda el verbo en pasado? ⏪') + '</div><div class="card"><p class="prompt">' + sent + '</p><div class="opts two">' +
+        t.options.map(function (o, i) { return '<button class="opt" id="o' + i + '" onclick="A.pPick(' + i + ')">' + esc(o) + '</button>'; }).join('') + '</div><div class="row c"><button class="btn soft small" onclick="A.pHint()">💡 Pista</button></div></div>' + nextBtn());
+    });
+  }
+  function pastMode(m) { pastScreen(m); }
+  function pHint() {
+    var t = R.t; R.first = false;
+    if (pMode === 'be') setSay(t.question ? 'Buscá la persona en la pregunta 👤. Si es <b>you</b> o son varios → <b>were</b>. Si es uno solo (your mum, your dad, the weather) → <b>was</b>.' : 'Mirá quién es la persona 👤: <b>I</b>, he, she, my mum, Nutti (uno solo) → <b>was</b>. <b>You</b>, we, they, my friends (varios) → <b>were</b>.', 'hint');
+    else setSay('Palabras como <b>yesterday, last weekend, ago</b> son el cartel de “¡esto ya pasó!” ⏪. Hay verbos <b>regulares</b> (les agregás <b>-ed</b>: play → played) y verbos <b>irregulares</b> que se disfrazan y cambian de forma 🎭. ¿Este cuál es? Si no te acordás, repasalo en las 🃏 Tarjetas.', 'hint');
+  }
+  function pPick(i) {
+    if (R.done) return;
+    var t = R.t, o = t.options[i], ok = o === t.ans;
+    $('o' + i).classList.add(ok ? 'ok' : 'bad');
+    if (ok) { var s = t.sentence.replace('___', t.ans); speak(s); answer(true, '<span class="en">“' + esc(s) + '”</span>' + (t.irregular ? '<br><span class="muted">🎭 Irregular: ' + esc(t.base) + ' → ' + esc(t.ans) + '</span>' : '')); }
+    else {
+      var why;
+      if (pMode === 'be') why = 'Fijate bien quién es la persona 👤: ¿uno solo o varios / you?';
+      else if (o === t.base) why = 'Esa es la forma de <b>hoy</b> (presente). La oración dice que ya pasó ⏪';
+      else if (/ing\b/.test(o)) why = 'Con -ing es “estoy haciendo ahora”. Acá ya terminó 🏁';
+      else if (/ed\b/.test(o) && t.irregular) why = '¡Buena idea agregar -ed, pero este verbo es <b>irregular</b> 🎭: se disfraza y cambia de forma!';
+      else why = 'Ese no es el pasado de <b>' + esc(t.base) + '</b>. ¡Probá otra vez!';
+      answer(false, null, why);
+    }
+  }
+
+  /* =========================================================
+     MEMORIA
+     ========================================================= */
+  var memDeck = 'verbs', M = null;
+  function memoryScreen(deck) {
+    cur = 'memory'; if (deck) memDeck = deck; setHeader('🧠 Memoria'); againFn = function () { memoryScreen(); };
+    var pairs = NT.memoryPairs(memDeck), cards = [];
+    pairs.forEach(function (p, k) { cards.push({ t: p[0], k: k, en: true }); cards.push({ t: p[1], k: k, en: memDeck === 'verbs' || memDeck === 'ordinals' || memDeck === 'clocks' }); });
+    M = { cards: NT.shuffle(cards), open: [], done: 0, moves: 0, lock: false, pairs: pairs };
+    render(chips(Object.keys(NT.DECKS).map(function (k) { return [k, NT.DECKS[k].ico + ' ' + NT.DECKS[k].name]; }), memDeck, 'memDeck') +
+      '<div id="say">' + nutti('Tocá dos cartas: si son pareja, ¡quedan dadas vuelta! 🧠 <span class="muted" id="moves">Jugadas: 0</span>') + '</div>' +
+      '<div class="mem">' + M.cards.map(function (c, i) { return '<button class="mc" id="m' + i + '" onclick="A.mFlip(' + i + ')"><span class="face back">🌰</span><span class="face front">' + esc(c.t) + '</span></button>'; }).join('') + '</div>');
+  }
+  function mFlip(i) {
+    var c = M.cards[i], el = $('m' + i);
+    if (M.lock || c.open || c.done) return;
+    flipAnim(el, true); c.open = true; M.open.push(i);
+    if (/^[a-z]/i.test(c.t) && c.en) speak(c.t);
+    if (M.open.length === 2) {
+      M.moves++; $('moves').textContent = 'Jugadas: ' + M.moves;
+      var a = M.cards[M.open[0]], b = M.cards[M.open[1]];
+      if (a.k === b.k) {
+        a.done = b.done = true; M.done++;
+        [M.open[0], M.open[1]].forEach(function (j) { $('m' + j).classList.add('done'); });
+        M.open = []; stat('memory', true);
+        if (M.done === M.pairs.length) {
+          var n = M.moves <= 9 ? 3 : M.moves <= 13 ? 2 : 1; addNuts(n); confetti(80);
+          setSay('<b>¡Encontraste todas, ' + nick() + '!</b> En ' + M.moves + ' jugadas. +' + n + ' 🌰<div class="row" style="margin-top:8px"><button class="btn small" onclick="A.memoryScreen()">🔁 Otra vez</button></div>', 'ok');
+        }
+      } else {
+        M.lock = true; stat('memory', false);
+        setTimeout(function () { M.open.forEach(function (j) { M.cards[j].open = false; flipAnim($('m' + j), false); }); M.open = []; M.lock = false; }, 1100);
+      }
+    }
+  }
+  function flipAnim(el, open) { el.classList.add('flip'); setTimeout(function () { el.classList.toggle('open', open); el.classList.remove('flip'); }, 170); }
+
+  /* =========================================================
+     TARJETAS
+     ========================================================= */
+  var cDeck = 'qwords', cIdx = 0, cBack = false;
+  function cardsScreen(deck) {
+    cur = 'cards'; if (deck && deck !== cDeck) { cDeck = deck; cIdx = 0; } cBack = false; setHeader('🃏 Tarjetas');
+    var d = NT.CARDS[cDeck], c = d.list[cIdx], kk = cDeck + ':' + cIdx, nk = d.list.filter(function (x, i) { return known[cDeck + ':' + i]; }).length;
+    render(chips(Object.keys(NT.CARDS).map(function (k) { return [k, NT.CARDS[k].ico + ' ' + NT.CARDS[k].name]; }), cDeck, 'cardsScreen') +
+      '<p class="muted center">Tarjeta ' + (cIdx + 1) + ' de ' + d.list.length + ' · ya sabés ' + nk + ' ✅</p>' +
+      '<button class="fc" id="fc" onclick="A.cFlip()"><div id="fcin">' + cardFace(c, false) + '</div></button>' +
+      '<div class="row c" style="margin-top:14px"><button class="btn soft" onclick="A.cMove(-1)">⬅️</button><button class="btn soft" onclick="A.say(' + reg(c.en.replace(' → ', ', ')) + ')">🔊</button><button class="btn ' + (known[kk] ? 'green' : 'soft') + '" onclick="A.cKnow()">' + (known[kk] ? '✅ ¡La sé!' : '☑️ La sé') + '</button><button class="btn soft" onclick="A.cMove(1)">➡️</button></div>' +
+      nutti('Leé la tarjeta en voz alta, pensá qué significa y tocala para darla vuelta 🔄'));
+    setTimeout(function () { speak(c.en.replace(' → ', ', ')); }, 200);
+  }
+  function cardFace(c, back) { return back ? '<div class="big fred">' + esc(c.es) + '</div>' + (c.note ? '<div class="note">' + esc(c.note) + '</div>' : '') : '<div class="big fred">' + esc(c.en) + '</div><div class="note">Tocá para ver 🔄</div>'; }
+  function cFlip() { var el = $('fc'); el.classList.add('flip'); setTimeout(function () { cBack = !cBack; $('fcin').innerHTML = cardFace(NT.CARDS[cDeck].list[cIdx], cBack); el.classList.remove('flip'); }, 160); }
+  function cMove(d) { var L = NT.CARDS[cDeck].list.length; cIdx = (cIdx + d + L) % L; cardsScreen(); }
+  function cKnow() { var kk = cDeck + ':' + cIdx; if (known[kk]) delete known[kk]; else { known[kk] = 1; addNuts(0); } save('known', known); cardsScreen(); }
+
+  /* =========================================================
+     SIMULACRO TRINITY
+     ========================================================= */
+  var X = null, SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null;
+  function examScreen() {
+    cur = 'exam'; setHeader('🎤 Simulacro Trinity'); againFn = examScreen;
+    render(nutti('¡Hoy yo soy el examinador, ' + nick() + '! 🎤<br>1️⃣ Te voy a hacer preguntas <b>en inglés</b> de dos temas. Escuchá y contestá <b>en voz alta</b>, con oraciones completas.<br>2️⃣ Al final, <b>vos me hacés preguntas a mí</b> (¡en el examen también pasa!).<br>Si no entendés, podés decir: <i>“Sorry, can you repeat that, please?”</i>') +
+      '<div class="card center"><p class="lbl">Temas del examen</p><div class="chips" style="justify-content:center">' + Object.keys(NT.EXAM).map(function (k) { return '<span class="pill">' + NT.TOPICS[k].ico + ' ' + NT.TOPICS[k].name + '</span>'; }).join('') + '</div>' +
+      '<p class="muted">' + (SR ? '🎙️ Podés usar el micrófono para ver lo que dijiste.' : 'Este navegador no tiene micrófono para Nutti, pero igual podés contestar en voz alta 🗣️') + '</p>' +
+      '<button class="btn green" onclick="A.examStart()">🎤 ¡Empezar!</button></div>');
+  }
+  function examStart() {
+    var tps = NT.shuffle(Object.keys(NT.EXAM)).slice(0, 2), qs = [];
+    tps.forEach(function (tp) { NT.shuffle(NT.EXAM[tp]).slice(0, 3).forEach(function (q) { qs.push({ tp: tp, q: q[0], st: q[1] }); }); });
+    var asks = NT.shuffle(NT.Q).slice(0, 2);
+    X = { qs: qs, i: 0, asks: asks, ai: 0, said: 0, full: 0 };
+    examQ();
+  }
+  function examQ() {
+    if (X.i >= X.qs.length) return examAsk();
+    var q = X.qs[X.i], tp = NT.TOPICS[q.tp];
+    X.reveal = false; X.answered = false;
+    render('<div class="prog">' + X.qs.map(function (_, k) { return '<i class="' + (k < X.i ? 'ok' : k === X.i ? 'cur' : '') + '"></i>'; }).join('') + '<i></i><i></i></div>' +
+      '<div class="card center"><span class="pill">' + tp.ico + ' ' + tp.name + '</span><div id="eq" class="examq blur">' + esc(q.q) + '</div>' +
+      '<div class="row c"><button class="btn" onclick="A.say(' + reg(q.q) + ',0.85)">🔊 Escuchar</button><button class="btn soft small" onclick="A.examRepeat()">🔁 “Sorry, can you repeat that, please?”</button><button class="btn soft small" onclick="A.examReveal()">👀 Ver la pregunta</button></div></div>' +
+      '<div id="say">' + nutti('Escuchá la pregunta y contestá en voz alta 🗣️. ¡Tratá de decir una oración completa!') + '</div>' +
+      '<div class="card center">' + (SR ? '<button class="mic" id="mic" onclick="A.listen()">🎙️</button><p class="muted">Tocá el micrófono y hablá</p><div class="transcript" id="tr">…</div>' : '') +
+      '<div class="row c" style="margin-top:12px"><button class="btn soft small" onclick="A.examStarter()">💡 Ayuda para empezar</button><button class="btn green" onclick="A.examNext()">✅ Ya contesté</button></div></div>');
+    setTimeout(function () { speak(q.q, 0.85); }, 400);
+  }
+  function examRepeat() { setSay('¡Muy bien pedido! 👏 Esa frase sirve en el examen. Escuchá otra vez, más despacito…', 'ok'); speak('Of course. ' + X.qs[X.i].q, 0.75); }
+  function examReveal() { $('eq').classList.remove('blur'); X.reveal = true; }
+  function examStarter() { var q = X.qs[X.i]; setSay('Podés empezar así: <span class="en">“' + esc(q.st) + '”</span> y lo completás con <b>tu</b> información 🙂', 'hint'); }
+  function listen() {
+    if (!SR) return;
+    try {
+      if (rec) { rec.stop(); return; }
+      rec = new SR(); rec.lang = 'en-GB'; rec.interimResults = true; rec.maxAlternatives = 1;
+      var m = $('mic'); m.classList.add('rec'); $('tr').textContent = '🎧 Escuchando…';
+      var finalTxt = '';
+      rec.onresult = function (e) { var txt = ''; for (var i = 0; i < e.results.length; i++) txt += e.results[i][0].transcript; finalTxt = txt; $('tr').textContent = '“' + txt + '”'; };
+      rec.onerror = function () { $('tr').textContent = 'No te pude escuchar bien 🙉 Probá de nuevo, o contestá en voz alta y tocá “Ya contesté”.'; };
+      rec.onend = function () { m.classList.remove('rec'); rec = null; if (finalTxt) examFeedback(finalTxt); };
+      rec.start();
+    } catch (e) { rec = null; }
+  }
+  function examFeedback(txt) {
+    var q = X.qs[X.i], words = txt.trim().split(/\s+/).length, past = /\b(did|was|were|yesterday|last)\b/i.test(q.q);
+    var msg = '';
+    if (words >= 4) { msg = '¡Oración completa! 👏 '; X.full++; } else msg = 'Fue cortita. En el Trinity suma mucho decir una <b>oración completa</b> y agregar algo más (and…, because…) 💪 ';
+    if (past && !NT.PAST_WORDS.test(txt)) msg += '<br>Ojo: la pregunta es en <b>pasado</b> ⏪. ¿Usaste un verbo en pasado (went, played, was…)?';
+    else if (past) msg += '<br>¡Y usaste el pasado! ⏪✔️';
+    setSay(msg, words >= 4 ? 'ok' : 'hint');
+  }
+  function examNext() { X.said++; addNuts(1); X.i++; examQ(); }
+  function examAsk() {
+    if (X.ai >= X.asks.length) return examEnd();
+    var it = X.asks[X.ai], tk = it.q.split(' ');
+    var task = { item: it, answer: tk, tiles: NT.shuffle(tk.map(function (w, k) { return { w: w, id: 'w' + k, ok: true }; })) };
+    R = null;
+    render('<div class="card center"><h2>🔄 Your turn!</h2><p class="muted">Ahora vos sos la examinadora. Pregunta ' + (X.ai + 1) + ' de ' + X.asks.length + '</p></div>' +
+      '<div id="say">' + nutti('Armala con las fichas y después decila en voz alta 🗣️') + '</div>' + builderHTML(task, '<p class="prompt">🎯 Preguntale a Nutti <b>' + esc(it.es) + '</b>.</p>') + '<div class="row c"><button id="nextbtn" class="btn green" style="display:none" onclick="A.examAskNext()">Siguiente ➜</button></div>');
+    B.onSolve = function () { addNuts(1); confetti(40); setSay('¡Muy bien preguntado! 🎉 Decila en voz alta vos también. Mi respuesta: <span class="en">“' + esc(it.a) + '”</span> ' + spk(it.a), 'ok'); $('nextbtn').style.display = ''; stat('exam', true); };
+  }
+  function examAskNext() { X.ai++; examAsk(); }
+  function examEnd() {
+    addNuts(2); confetti(100);
+    render('<div class="card center fade"><h2 class="big">🏆 ¡Terminaste el simulacro!</h2><p class="prompt">Contestaste ' + X.said + ' preguntas e hiciste ' + X.asks.length + ' preguntas</p><p>+2 🌰 de premio</p></div>' +
+      nutti('<b>Truquitos para el día del examen:</b><br>✔️ Contestá con oraciones completas: no solo “Yes”, sino “Yes, I do. I play on Saturdays.”<br>✔️ Agregá algo más con <b>and</b> o <b>because</b>.<br>✔️ Si no entendés, decí <i>“Sorry, can you repeat that, please?”</i><br>✔️ ¡Acordate de hacerle preguntas al examinador! 🧩', 'ok') +
+      '<div class="row c"><button class="btn" onclick="A.examScreen()">🔁 Otro simulacro</button><button class="btn soft" onclick="A.go(\'home\')">🏠 Inicio</button></div>');
+  }
+
+  /* =========================================================
+     ZONA ADULTOS
+     ========================================================= */
+  var CH = null;
+  var AREAS = { build: '🧩 Armar preguntas', pastq: '🧩 Preguntas en pasado', detective: '🕵️ Detective', errors: '🔍 Cazá el error', clock: '🕐 Reloj', date: '📅 Fechas', day: '📆 Ayer/mañana', prepT: '🧱 in/on/at', follow: '👣 Seguir camino', explain: '🗣️ Explicar camino', street: '🏘️ next to/opposite', past: '⏪ Verbos pasado', be: '🪞 was/were', memory: '🧠 Memoria', exam: '🎤 Simulacro' };
+  function settings() {
+    CH = NT.adultChallenge();
+    var vo = voices.map(function (v, i) { return '<option value="' + i + '"' + (voice && v.name === voice.name ? ' selected' : '') + '>' + esc(v.name) + ' (' + v.lang + ')</option>'; }).join('');
+    var rows = Object.keys(AREAS).filter(function (k) { return stats[k]; }).map(function (k) { var s = stats[k], p = Math.round(100 * s.ok / s.n); return '<tr><td>' + AREAS[k] + '</td><td style="width:40%"><div class="bar"><i style="width:' + p + '%;background:' + (p >= 75 ? 'var(--ok)' : p >= 50 ? 'var(--s1)' : 'var(--bad)') + '"></i></div></td><td>' + p + '%</td><td class="muted">' + s.n + '</td></tr>'; }).join('');
+    var m = document.createElement('div'); m.className = 'modal'; m.id = 'modal';
+    m.onclick = function (e) { if (e.target === m) closeModal(); };
+    m.innerHTML = '<div class="sheet"><div class="row"><h2>⚙️ Ajustes</h2><span class="spacer"></span><button class="iconbtn" onclick="A.closeModal()">✖️</button></div>' +
+      '<p class="lbl">Voz de Nutti (inglés)</p>' + (voices.length ? '<select id="vsel" onchange="A.setVoice(this.value)">' + vo + '</select><div class="row" style="margin-top:8px"><button class="btn soft small" onclick="A.say(\'Hello Isa! Where do you live?\')">🔊 Probar voz</button></div>' : '<p class="muted">Este navegador no tiene voces en inglés.</p>') +
+      '<p class="lbl" style="margin-top:18px">📊 Progreso (para mamá y papá)</p>' + (rows ? '<table class="stats"><tr class="muted"><td>Actividad</td><td>Aciertos</td><td>%</td><td>Intentos</td></tr>' + rows + '</table>' : '<p class="muted">Todavía no hay datos.</p>') +
+      '<p class="lbl" style="margin-top:18px">🔒 Zona de adultos: borrar todo el progreso</p><p class="muted">¿Cuánto es ' + CH.a + ' × ' + CH.b + '?</p><div class="row"><input id="ach" type="number" inputmode="numeric" style="width:120px"><button class="btn soft small" onclick="A.reset1()">Borrar</button></div><div id="rs"></div></div>';
+    document.body.appendChild(m);
+  }
+  function closeModal() { var m = $('modal'); if (m) m.remove(); }
+  function setVoice(i) { voice = voices[+i]; try { localStorage.setItem(VOICE_KEY, voice.name); } catch (e) { } speak('Hello ' + nick() + '!'); }
+  function reset1() {
+    if (+$('ach').value !== CH.ans) { $('rs').innerHTML = '<p style="color:var(--bad)">Respuesta incorrecta.</p>'; return; }
+    $('rs').innerHTML = '<p><b>¿Seguro?</b> Se borran las avellanas y el progreso.</p><button class="btn small" style="background:var(--bad)" onclick="A.reset2()">Sí, estoy seguro</button>';
+  }
+  function reset2() { $('rs').innerHTML = '<p><b>Última confirmación.</b> No se puede deshacer.</p><button class="btn small" style="background:var(--bad)" onclick="A.reset3()">Borrar definitivamente</button>'; }
+  function reset3() { nuts = 0; stats = {}; known = {}; save('nuts', 0); save('stats', {}); save('known', {}); closeModal(); $('nuts').textContent = '🌰 0'; go('home'); }
+
+  /* ---------- navegación ---------- */
+  function go(s) {
+    try { speechSynthesis.cancel(); } catch (e) { }
+    if (rec) try { rec.stop(); } catch (e) { }
+    cur = s; R = null;
+    var map = { home: home, build: function () { bOpts.rules = null; bOpts.top = ''; buildScreen(); }, detective: detectiveScreen, errors: errorsScreen, time: function () { timeScreen(); }, dirs: function () { dirsScreen(); }, past: function () { pastScreen(); }, memory: function () { memoryScreen(); }, cards: function () { cardsScreen(); }, exam: examScreen };
+    setHeader(); (map[s] || home)();
+  }
+  function init() {
+    $('nuts').textContent = '🌰 ' + nuts;
+    document.querySelectorAll('.avimg').forEach(function (i) { i.src = IMG; });
+    go('home');
+  }
+
+  return {
+    _st: function () { return { R: R, B: B, M: M, X: X, MAP: MAP, cur: cur }; },
+    init: init, go: go, next: next, again: function () { againFn ? againFn() : go('home'); },
+    say: function (i, r) { speak(typeof i === 'number' ? REG[i] : i, r); },
+    tap: tap, untap: untap, undo: undo, clearB: clearB, hint: hint, check: check, setTopic: setTopic, setTrap: setTrap,
+    detPick: detPick, detHint: detHint, errPick: errPick,
+    timeMode: timeMode, clockLvl: clockLvl, tHint: tHint, tPick: tPick,
+    dirsMode: dirsMode, dHint: dHint, mapTap: mapTap, dPick: dPick,
+    pastMode: pastMode, pHint: pHint, pPick: pPick,
+    memoryScreen: memoryScreen, memDeck: function (d) { memoryScreen(d); }, mFlip: mFlip,
+    cardsScreen: cardsScreen, cFlip: cFlip, cMove: cMove, cKnow: cKnow,
+    examScreen: examScreen, examStart: examStart, examRepeat: examRepeat, examReveal: examReveal, examStarter: examStarter, listen: listen, examNext: examNext, examAskNext: examAskNext,
+    settings: settings, closeModal: closeModal, setVoice: setVoice, reset1: reset1, reset2: reset2, reset3: reset3
+  };
+})();
+</script>
+<script>A.init();</script>
+</body>
+</html>
